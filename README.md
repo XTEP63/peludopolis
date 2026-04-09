@@ -677,9 +677,3 @@ Las siguientes actividades inmediatas son:
 
 Uso académico / escolar.
 
-```
-
-Lo bueno de esta base es que ya no está improvisada: respeta el flujo funcional del documento y también los extras de backend que sí piden, como autenticación, cifrado de contraseñas, control por roles, validación de disponibilidad, cálculo automático, promociones, correo, historial, estados y baja lógica. :contentReference[oaicite:3]{index=3} :contentReference[oaicite:4]{index=4} :contentReference[oaicite:5]{index=5}
-
-El siguiente paso natural ya es darte los **comandos exactos para crear el repo y toda la estructura**.
-```
