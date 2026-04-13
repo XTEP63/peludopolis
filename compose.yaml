@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    container_name: peludopolis-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: peludopolis_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - peludopolis_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d peludopolis_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  peludopolis_pg_data:
