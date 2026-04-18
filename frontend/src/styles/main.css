@@ -1,0 +1,105 @@
+/*VARIABLES Y ESTILOS GENERALES*/
+
+/* Color Principal del Body */
+body { 
+    background: #e7e7e7;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* NAVBAR*/
+
+/* Color de fondo de la Navbar */
+.navbar {
+    background-color: #759e9e
+}
+
+/* Hover en los enlaces del navbar */
+.navbar-nav .nav-link:hover {
+    background-color: rgba(21, 58, 88, 0.288); /* Que tenga transaprencia*/
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover en iconos de navbar */
+.navbar .text-white:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* Carousel? */
+
+/* Tamaño  para imagenes del carrusel */
+.img_c {
+    height: 550px;          
+    object-fit: cover;
+}
+
+
+/*Color de los guiones del carrucel*/
+.carousel-indicators [data-bs-target] {
+    background-color: #c0cdda;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-indicators .active {
+    opacity: 1;
+}
+
+/*Poner las flechitas del carrucel en color negro*/
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
+/* Captions del carusel */
+.carousel-inner p,
+.carousel-inner h5 {
+    color: #afcad3;
+    text-shadow: 2px 2px 4px rgba(11, 12, 12, 0.822);
+}
+
+/* Fondo semi-transparente para captions */
+.carousel-caption {
+    background-color: rgba(19, 46, 47, 0.8);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* Modal de Registro */
+#registryModal .modal-content {
+    background-color: #909e75;
+    color: white;
+}
+
+#registryModal .modal-header {
+    background-color: #5e6341;
+    color: white;
+}
+
+#registryModal .btn-close {
+    filter: invert(1);
+}
+
+/* Modal de Login */
+#loginModal .modal-content {
+    background-color: #80759e;
+    color: white;
+}
+
+#loginModal .modal-header {
+    background-color: #4c4163;
+    color: white;
+}
+
+#loginModal .btn-close {
+    filter: invert(1);
+}
+
+/* Galeria */
+.galeria-img {
+    width: 100%;
+    height: 300px;      /* misma altura para todas */
+    object-fit: cover;  /* recorta sin deformar */
+}
+

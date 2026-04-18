@@ -1,0 +1,19 @@
+/* NAVBAR*/
+
+/* Color de fondo de la Navbar */
+.navbar {
+    background-color: #759e9e
+}
+
+/* Hover en los enlaces del navbar */
+.navbar-nav .nav-link:hover {
+    background-color: rgba(21, 58, 88, 0.288); /* Que tenga transaprencia*/
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover en iconos de navbar */
+.navbar .text-white:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
