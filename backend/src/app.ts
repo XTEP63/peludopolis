@@ -1,5 +1,6 @@
 import express from "express"
 import cors from "cors"
+import path from "path"
 import { env } from "./config/env"
 import authRoutes from './api/auth.routes'
 
@@ -13,12 +14,12 @@ app.use(
 
 app.use(express.json())
 
-app.get("/", (_req, res) => {
-  res.status(200).json({
-    ok: true,
-    message: "API de Peludópolis funcionando"
-  })
-})
+// Servir archivos del frontend
+app.use(
+  express.static(
+    path.join(__dirname, "../../frontend/src")
+  )
+)
 
 app.get("/health", (_req, res) => {
   res.status(200).json({
@@ -39,5 +40,26 @@ app.get("/system/info", (_req, res) => {
 })
 
 app.use('/auth', authRoutes)
+
+// Página de inicio
+app.get("/", (_req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/src/pages/index.html")
+  )
+})
+
+// Página de reviews
+app.get("/reviews", (_req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/src/pages/reviews.html")
+  )
+})
+
+// Página de habitaciones
+app.get("/habitaciones", (_req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/src/pages/habitaciones.html")
+  )
+})
 
 export default app;

@@ -1,6 +1,12 @@
-/* NAVBAR*/
 
-/* Color de fondo de la Navbar */
+/* VARIABLES Y ESTILOS GENERALES*/
+
+body { 
+    background: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* NAVBAR */
 .navbar {
     background-color: #759e9e
 }
@@ -16,4 +22,164 @@
 .navbar .text-white:hover {
     opacity: 0.8;
     transition: opacity 0.3s ease;
+}
+
+
+/* MODALES*/
+/* Header */
+#infoModal .modal-header{
+    background-color: #9fc0d8; /* verde pastel */
+    border-bottom: none;
+}
+
+#infoModal .modal-title{
+    color: #332f5d;
+}
+
+/* Body */
+#infoModal .modal-body{
+    background-color: #f6fbf9;
+    color: #3f495f;
+}
+
+/* Subtítulos */
+#infoModal .modal-body h6{
+    color: #464764;
+}
+
+/* footer */
+#infoModal .modal-footer{
+    background-color: #f6fbf9;
+    border-top: none;
+}
+
+/* botón cerrar */
+#infoModal .btn-secondary{
+    background-color: #7a87a8;
+    border: none;
+    color: #2f345d;
+}
+
+#infoModal .btn-secondary:hover{
+    background-color: #2e373c;
+}
+
+/* FILTROS SIDEBAR */
+.sticky-filters {
+    position: sticky;
+    top: 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Hover general */
+.sticky-filters:hover {
+    border-color: #759e9e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Título */
+.sticky-filters h5 {
+    color: #774f7f;
+}
+
+/* Botón limpiar hover */
+#clearFilters:hover {
+    background-color: #774f7f;
+    color: white;
+}
+
+#filter-price::-webkit-slider-thumb {
+    background: #774f7f;
+}
+
+/* TARJETAS DE HABITACIONES */
+.room-hover:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2) !important;
+}
+
+.card-title {
+    color: #000000;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.card-text {
+    color: #4f4e4e;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Imagenes*/
+.hab_img {
+    width: 100%;
+    height: 200px;      /* misma altura para todas */
+    object-fit: cover;  /* recorta sin deformar */
+}
+
+/* Badges de estado y temática */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.4em 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.badge.bg-success {
+    background-color: #a9c085 !important;
+}
+
+.badge.bg-warning {
+    background-color: #9f85b6 !important;
+    color: #000;
+}
+
+.badge.bg-danger {
+    background-color: #484e09 !important;
+}
+
+.badge.bg-info {
+    background-color: #618287 !important;
+}
+
+.badge.bg-primary {
+    background-color: #82b5bd !important;
+}
+
+
+/* MODALES*/
+#infoModal .modal-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#infoModal .modal-body h6 {
+    margin-top: 1rem;
+}
+
+#infoModal .modal-body ul {
+    line-height: 1.8;
+}
+
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+}
+
+
+/* UTILIDADES Y HELPERS*/
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+/* Sombras personalizadas */
+.shadow-sm {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+}
+
+/* Alto contraste para texto */
+.card-text {
+    color: #444;
 }
