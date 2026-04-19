@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peludópolis | Habitaciones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../styles/habitaciones.css">
+</head>
+
+<body>
+  <!-- Barra de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+
+      <!-- Marca/Logo -->
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="bi bi-house-heart"></i> Peludópolis
+      </a>
+
+      <!-- Botón para cuando no se pueda renderizar en toda la pantalla-->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+        aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Menú de navegación -->
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/index">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="servicios">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="/reviews">Reseñas</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="container my-5">
+
+    <!-- Encabezado con botón de info -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h2 class="m-0">
+        <i class="bi bi-door-open" style="color: #717f4f;"></i> Explora Nuestras Suites
+      </h2>
+      <button class="btn btn-sm" 
+        style="border: 1px solid #717f4f; color:#717f4f;"
+        data-bs-toggle="modal" 
+        data-bs-target="#infoModal">
+      <i class="bi bi-info-circle"></i> Información General
+    </button>
+    </div>
+
+    <div class="row">
+
+      <!-- Filtros -->
+      <aside class="col-lg-3 mb-4">
+        <div class="card p-3 shadow-sm sticky-filters">
+          <h5 class="fw-bold mb-3">
+            <i class="bi bi-funnel"></i> Filtros
+          </h5>
+
+          <!-- Filtro por tipo de mascota -->
+          <label class="form-label mt-2">Tipo de Mascota</label>
+          <select class="form-select filter" id="filter-type">
+            <option value="Todos">Todas</option>
+            <option value="perro">Perro</option>
+            <option value="gato">Gato</option>
+            <option value="exotico">Exótico</option>
+          </select>
+
+          <!-- Filtro por tamaño -->
+          <label class="form-label mt-3">Tamaño</label>
+          <select class="form-select filter" id="filter-size">
+            <option value="Todos">Todos</option>
+            <option value="chico">Chico</option>
+            <option value="mediano">Mediano</option>
+            <option value="grande">Grande</option>
+          </select>
+
+          <!-- Filtro por temática -->
+          <label class="form-label mt-3">Temática</label>
+          <select class="form-select filter" id="filter-theme">
+            <option value="Todos">Todas</option>
+            <option value="clasica">Clásica</option>
+            <option value="aventura">Aventura</option>
+            <option value="lujo">Lujo</option>
+            <option value="tematica">Temática</option>
+          </select>
+
+          <!-- Filtro por precio -->
+          <label class="form-label mt-3">Precio máximo</label>
+          <input type="range" class="form-range filter" id="filter-price" min="250" max="1200" step="50" value="1200">
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">$250</small>
+            <small class="fw-bold" style="color: #774f7f;">$<span id="priceValue">1200</span></small>
+            <small class="text-muted">$1200</small>
+          </div>
+
+          <!-- Botón limpiar filtros -->
+          <button class="btn btn-outline-secondary btn-sm mt-3" id="clearFilters">
+            <i class="bi bi-x-circle"></i> Limpiar Filtros
+          </button>
+
+          <!-- Contador de resultados -->
+          <div class="alert alert-info mt-3 mb-0" role="alert" style="background-color: #a799b6; color: white; border: 0mm;">
+            <small><i class="bi bi-search"></i> <span id="resultCount">12</span> habitaciones disponibles</small>
+          </div>
+        </div>
+      </aside>
+
+      <!-- GRID DE HABITACIONES-->
+      <div class="col-lg-9">
+        <div class="row g-4" id="rooms">
+
+          <!-- Hab 1 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="chico" data-price="350" data-theme="clasica">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/SMD.jpg" class="card-img-top hab_img" alt="Suite Mini Dog">
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Suite Mini Dog</h5>
+                  <span class="badge bg-primary">Clásica</span>
+                </div>
+                <p class="card-text flex-grow-1">Perfecto para perros pequeños y tranquilos.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Hasta 10kg
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$350 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 2 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="mediano" data-price="550" data-theme="clasica">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/SDC.jpg" class="card-img-top hab_img">
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Suite Dog Comfort</h5>
+                  <span class="badge bg-primary">Clásica</span>
+                </div>
+                <p class="card-text flex-grow-1">Ideal para perros activos.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> 10kg a 25kg
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$550 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 3 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="gato" data-size="chico" data-price="400" data-theme="clasica">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/SF.png" class="card-img-top hab_img">
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Suite Felina</h5>
+                  <span class="badge bg-primary">Clásica</span>
+                </div>
+                <p class="card-text flex-grow-1">Espacio tranquilo para gatos.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Arenero incluido
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$400 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 4 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro gato" data-size="mediano" data-price="850" data-theme="tematica">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/INT.jpeg" class="card-img-top hab_img">
+                <span class="badge bg-warning position-absolute top-0 end-0 m-2">Popular</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Suite Interestelar</h5>
+                  <span class="badge bg-danger">Temática</span>
+                </div>
+                <p class="card-text flex-grow-1">Decoración espacial con luces LED.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Proyector incluido
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$850 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 5 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro gato" data-size="chico" data-price="650" data-theme="lujo">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/ZEN.jpg" class="card-img-top hab_img">
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Jardín Zen</h5>
+                  <span class="badge bg-warning">Lujo</span>
+                </div>
+                <p class="card-text flex-grow-1">Ambiente relajante.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Música relajante
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$650 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 6 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="grande" data-price="1000" data-theme="tematica">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/CM.jpg" class="card-img-top hab_img">
+                <span class="badge bg-danger position-absolute top-0 end-0 m-2">VIP</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Castillo Medieval</h5>
+                  <span class="badge bg-danger">Temática</span>
+                </div>
+                <p class="card-text flex-grow-1">Decoración de castillo.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Fotografía incluida
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$1000 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 7 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="mediano" data-price="700" data-theme="aventura">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/BE.jpg" class="card-img-top hab_img">
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Bosque Encantado</h5>
+                  <span class="badge bg-info">Aventura</span>
+                </div>
+                <p class="card-text flex-grow-1">Temática de naturaleza.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Área de exploración
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$700 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 8 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="grande" data-price="1200" data-theme="lujo">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/PTH.jpg" class="card-img-top hab_img">
+                <span class="badge bg-info position-absolute top-0 end-0 m-2">Exclusivo</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Penthouse VIP</h5>
+                  <span class="badge bg-warning">Lujo</span>
+                </div>
+                <p class="card-text flex-grow-1">Máximo lujo.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Mayordomo incluido
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$1200 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hab 9 -->
+          <div class="col-md-6 col-xl-4 room-card" data-type="exotico" data-size="mediano" data-price="900" data-theme="clasica">
+            <div class="card h-100 shadow-sm room-hover">
+              <div class="position-relative">
+                <img src="../assets/ter.jpg" class="card-img-top hab_img">
+                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
+              </div>
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between mb-2">
+                  <h5 class="card-title mb-0">Terrario Exótico</h5>
+                  <span class="badge bg-primary">Clásica</span>
+                </div>
+                <p class="card-text flex-grow-1">Clima controlado.</p>
+                <span class="badge bg-light text-dark border mb-2">
+                  <i class="bi bi-info-circle"></i> Control temperatura
+                </span>
+                <p class="fw-bold mt-auto" style="color:#4f737f;">$900 MXN/noche</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!--FOOTER-->
+  <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="bi bi-house-heart"></i> Peludópolis</h5>
+                    <p>El hogar temporal de tu mejor amigo</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Contacto</h6>
+                    <p>
+                        <i class="bi bi-geo-alt"></i> Guadalajara, México<br>
+                        <i class="bi bi-telephone"></i> (+52 1) 33 1147 5558<br>
+                        <i class="bi bi-envelope"></i> info@peludopolis.com
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Síguenos</h6>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.facebook.com/share/1BHUw6AYpf/" class="text-white"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="https://www.instagram.com/dian.val_/" class="text-white"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="https://x.com/isavalladolidd?s=11" class="text-white"><i class="bi bi-twitter fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-white">
+            <p class="text-center mb-0">© 2026 Peludópolis - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+  <!-- MODAL DE INFORMACIÓN-->
+  <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-info-circle"></i> Información General de Habitaciones
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <h6 class="fw-bold">
+            <i class="bi bi-clipboard-check"></i> Requisitos para Check-in
+          </h6>
+          <ul>
+            <li>Cartilla de vacunación vigente (indispensable)</li>
+            <li>Certificado veterinario reciente (máximo 30 días)</li>
+            <li>Sin enfermedades contagiosas activas</li>
+            <li>Identificación oficial del dueño</li>
+            <li>Contacto de emergencia</li>
+            <li>Información sobre alergias o medicamentos</li>
+          </ul>
+
+          <h6 class="fw-bold mt-4">
+            <i class="bi bi-check-circle"></i> Incluido en Todas las Habitaciones
+          </h6>
+          <ul>
+            <li>Alimentación según indicaciones del dueño</li>
+            <li>Área climatizada y ventilada</li>
+            <li>Limpieza y desinfección diaria</li>
+            <li>Supervisión profesional 24/7</li>
+            <li>Atención veterinaria de emergencia</li>
+          </ul>
+
+          <h6 class="fw-bold  mt-4">
+            <i class="bi bi-clock"></i> Horarios
+          </h6>
+          <p class="mb-1"><strong>Check-in:</strong> 9:00 AM - 6:00 PM (flexibilidad previa reserva)</p>
+          <p class="mb-1"><strong>Check-out:</strong> Antes de 12:00 PM</p>
+          <p class="mb-3"><strong>Check-out tardío:</strong> Disponible con cargo adicional</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
