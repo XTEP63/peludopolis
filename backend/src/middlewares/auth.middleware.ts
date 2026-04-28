@@ -33,3 +33,26 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
         })
     }
 }
+
+/*Ensures the authenticated user has the 'admin' role.
+Must always be chained AFTER verifyToken.
+ */
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+    /* No ha hecho login*/
+    if (!req.user) {
+        return res.status(401).json({
+            ok: false,
+            message: "No autenticado",
+        });
+    }
+
+    /*si no hay role de amdin*/
+    if (req.user.role !== "admin") {
+        return res.status(403).json({
+            ok: false,
+            message: "Acceso denegado: se requiere rol de administrador",
+        });
+    }
+
+    next();
+};

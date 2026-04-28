@@ -3,6 +3,7 @@ import cors from "cors"
 import path from "path"
 import { env } from "./config/env"
 import authRoutes from './api/auth.routes'
+import adminRoutes from "./api/admin.routes";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.get("/system/info", (_req, res) => {
 })
 
 app.use('/auth', authRoutes)
+app.use("/admin", adminRoutes);
 
 // Página de inicio
 app.get("/", (_req, res) => {
