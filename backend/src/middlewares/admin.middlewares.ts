@@ -7,14 +7,34 @@ import { Request, Response, NextFunction } from "express";
 const isNonEmptyString = (v: unknown): boolean =>
     typeof v === "string" && v.trim().length > 0;
 
-const isPositiveNumber = (v: unknown): boolean =>
-    typeof v === "number" && v > 0;
+const isPositiveNumber = (v: unknown): boolean => {
+    if (typeof v === "number") return v > 0;
 
-const isNonNegativeNumber = (v: unknown): boolean =>
-    typeof v === "number" && v >= 0;
+    if (typeof v === "string" && v.trim() !== "") {
+        const n = Number(v);
+        return !isNaN(n) && n > 0;
+    }
+
+    return false;
+};
+
+const isNonNegativeNumber = (v: unknown): boolean => {
+    if (typeof v === "number") return v >= 0;
+
+    if (typeof v === "string" && v.trim() !== "") {
+        const n = Number(v);
+        return !isNaN(n) && n >= 0;
+    }
+
+    return false;
+};
 
 const isValidEmail = (v: unknown): boolean =>
     typeof v === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+// Solo para los validadores de req.query :(
+const isIn = <T extends string>(arr: readonly T[], v: unknown): v is T =>
+    typeof v === "string" && (arr as readonly string[]).includes(v);
 
 /* Listas para los valores restringidos de las tablas */
 
@@ -31,23 +51,20 @@ const RES_STATUSES  = ["pendiente", "confirmada", "cancelada", "en_curso", "fina
 export const validateUserFilters = (req: Request, res: Response, next: NextFunction) => {
     const { role, status } = req.query;
 
-    if (role && typeof role === "string" && !USER_ROLES.includes(role as any)) {
-        return res.status(400).json({
-            ok: false,
-            message: `role debe ser uno de: ${USER_ROLES.join(", ")}`
-        });
+    if (role !== undefined) {
+        if (typeof role !== "string" || !isIn(USER_ROLES, role)) {
+            return res.status(400).json({ok: false, message: `role debe ser uno de: ${USER_ROLES.join(", ")}`});
+        }
     }
 
-    if (status && typeof status === "string" && !USER_STATUSES.includes(status as any)) {
-        return res.status(400).json({
-            ok: false,
-            message: `status debe ser uno de: ${USER_STATUSES.join(", ")}`
-        });
+    if (status !== undefined) {
+        if (typeof status !== "string" || !isIn(USER_STATUSES, status)) {
+            return res.status(400).json({ok: false, message: `status debe ser uno de: ${USER_STATUSES.join(", ")}`});
+        }
     }
 
     next();
 };
-
 /* Validación del PATCH de admin a un usuario */
 
 export const validatePatchUser = (req: Request, res: Response, next: NextFunction) => {
@@ -100,7 +117,29 @@ export const validatePetsFilters = (req: Request, res: Response, next: NextFunct
     next();
 };
 
-/* Validación de las habotaciones */
+/* Validación de las habitaciones */
+
+/* Validar los params filtros del GET*/
+export const validateRoomFilters = (req: Request, res: Response, next: NextFunction) => {
+    const { status, pet_type_allowed, size_allowed } = req.query;
+
+    if (status !== undefined && !isIn(ROOM_STATUSES, status)) {
+        return res.status(400).json({ ok: false, message: `status debe ser: ${ROOM_STATUSES.join(", ")}.` });
+        
+    }
+
+    if (pet_type_allowed !== undefined && !isIn(PET_TYPES, pet_type_allowed)) {
+        return res.status(400).json({ ok: false, message: `pet_type_allowed debe ser: ${PET_TYPES.join(", ")}.` });
+        
+    }
+
+    if (size_allowed !== undefined && !isIn(ROOM_SIZES, size_allowed)) {
+        return res.status(400).json({ ok: false, message: `size_allowed debe ser: ${ROOM_SIZES.join(", ")}.` });
+        
+    }
+
+    next();
+};
 
 /* Validar los campos cuando creamos un una nueba hab como admin */
 export const validateCreateRoom = (req: Request, res: Response, next: NextFunction) => {
@@ -125,6 +164,7 @@ export const validateCreateRoom = (req: Request, res: Response, next: NextFuncti
 };
 
 /* Validar cuando solo hacemos una modificación a esta*/
+/* Campos op*/
 export const validatePatchRoom = (req: Request, res: Response, next: NextFunction) => {
     const { name, pet_type_allowed, size_allowed, capacity, price_per_night } = req.body;
 
@@ -159,7 +199,19 @@ export const validateRoomStatus = (req: Request, res: Response, next: NextFuncti
     next();
 };
 
-/* Validadores de los Serviccios */
+/* Validadores de los Servicios */
+
+/* Validar la búsqueda de servicio con sus filtros op */
+export const validateServiceFilters = (req: Request, res: Response, next: NextFunction): void => {
+    const { status } = req.query;
+
+    if (status !== undefined && !["activo", "inactivo"].includes(status as string)) {
+        res.status(400).json({ ok: false, message: "status debe ser: activo, inactivo." });
+        return;
+    }
+
+    next();
+};
 
 /* Validar todos los campos de cuando se crea un nuevo servicio */
 export const validateCreateService = (req: Request, res: Response, next: NextFunction) => {
@@ -191,7 +243,6 @@ export const validatePatchService = (req: Request, res: Response, next: NextFunc
 };
 
 /* Validar una reservación */
-
 /*Validar cuando se hace un cambio en el estado de la reservación */
 export const validateReservationStatus = (req: Request, res: Response, next: NextFunction) => {
     const { reservation_status } = req.body;
