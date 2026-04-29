@@ -1,4 +1,4 @@
-/* All custom errors extend this so the error-handler middleware */
+/* Util para manejar tipos de errores, los más comúnes*/
 export class AppError extends Error {
     public readonly statusCode: number;
 
@@ -10,28 +10,28 @@ export class AppError extends Error {
     }
 }
 
-/** 404 – Resource not found */
+/** 404 – No existe el recurso */
 export class NotFoundError extends AppError {
     constructor(message = "Recurso no encontrado.") {
         super(message, 404);
     }
 }
 
-/** 400 – Invalid or missing input data */
+/** 400 – Los datos son inválidos o hacen falta */
 export class ValidationError extends AppError {
     constructor(message = "Datos inválidos.") {
         super(message, 400);
     }
 }
 
-/** 401 – Authentication required or token invalid */
+/** 401 – Token inválido/falla de auth */
 export class UnauthorizedError extends AppError {
     constructor(message = "No autenticado.") {
         super(message, 401);
     }
 }
 
-/** 403 – Authenticated but not allowed */
+/** 403 – Permiso restringido solo a admins */
 export class ForbiddenError extends AppError {
     constructor(message = "Acceso denegado.") {
         super(message, 403);

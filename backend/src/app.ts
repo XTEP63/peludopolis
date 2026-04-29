@@ -3,7 +3,9 @@ import cors from "cors"
 import path from "path"
 import { env } from "./config/env"
 import authRoutes from './api/auth.routes'
-import adminRoutes from "./api/admin.routes";
+import adminRoutes from "./api/admin.routes"
+import { AppError } from "./utils/errors"
+import { Request, Response, NextFunction } from "express"
 
 const app = express();
 
@@ -40,8 +42,24 @@ app.get("/system/info", (_req, res) => {
   })
 })
 
-app.use('/auth', authRoutes)
+app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes);
+
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err);
+
+    if (err instanceof AppError) {
+        return res.status(err.statusCode).json({
+            ok: false,
+            message: err.message
+        });
+    }
+
+    return res.status(500).json({
+        ok: false,
+        message: "Error interno del servidor"
+    });
+});
 
 // Página de inicio
 app.get("/", (_req, res) => {

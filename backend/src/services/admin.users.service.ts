@@ -1,6 +1,11 @@
 import * as repo from "../repositories/admin.user.repository";
 import { NotFoundError } from "../utils/errors";
 
+//PICK - de todo este objeto solo quiero
+//PARTIAL - Hazlos opcionales ?
+
+// USUARIOS 
+
 /* GET- Todos */
 export const getAllUsers = async (filters: any) => {
     return repo.findAllUsers(filters);
@@ -38,6 +43,8 @@ export const updateUserStatus = async (id: number, status: any) => {
 
     return await repo.updateUserStatusById(id, status);
 };
+
+// MASCOTAS
 
 /* GET - Obetner las mascotas de un usuario */
 export const getUserPets = async (userId: number, species?: string) => {
