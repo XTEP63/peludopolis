@@ -13,5 +13,4 @@ for (const envName of requiredEnvs) {
 export const env = {
   PORT: Number(process.env.PORT) || 3001,
   NODE_ENV: process.env.NODE_ENV || "development",
-  BACKEND_URL: process.env.BACKEND_URL || "http://localhost:3000"
 };

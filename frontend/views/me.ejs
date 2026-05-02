@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+</head>
+<body>
+    <div id="profile">
+        <h1>Cargando...</h1>
+    </div>
+
+    <script>
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                document.getElementById('profile').innerHTML = `
+                    <h1>No estás autenticado</h1>
+                    <p>Por favor, inicia sesión para ver tu perfil.</p>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/auth/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+
+                if (data.ok) {
+                    document.getElementById('profile').innerHTML = `
+                        <h1>Bienvenido, ${data.data.username}!</h1>
+                        <p>Email: ${data.data.email}</p>
+                        <p>Rol: ${data.data.role}</p>
+                    `;
+                } else {
+                    document.getElementById('profile').innerHTML = `
+                        <h1>Error al cargar perfil</h1>
+                        <p>${data.message || 'Token inválido'}</p>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('profile').innerHTML = `
+                    <h1>Error</h1>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

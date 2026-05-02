@@ -456,5 +456,104 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/api/auth.api.js"></script>
+
+    <script>
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                // User is logged in, show user nav and fetch user data
+                document.getElementById('nav-guest').style.display = 'none';
+                document.getElementById('nav-user').style.display = 'block';
+
+                // Fetch and display user data
+                loadUserData(token);
+            } else {
+                // User is not logged in, show guest nav
+                document.getElementById('nav-guest').style.display = 'block';
+                document.getElementById('nav-user').style.display = 'none';
+            }
+        });
+
+        async function loadUserData(token) {
+            try {
+                const response = await fetch('http://localhost:3000/auth/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    displayUserWelcome(data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+
+        function displayUserWelcome(user) {
+            // Add a welcome message after the navbar
+            const navbar = document.querySelector('.navbar');
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'bg-primary text-white py-2';
+            welcomeDiv.innerHTML = `
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>¡Bienvenido de vuelta, ${user.firstName || user.username}!</span>
+                        <small>Último acceso: ${new Date().toLocaleDateString('es-ES')}</small>
+                    </div>
+                </div>
+            `;
+            navbar.parentNode.insertBefore(welcomeDiv, navbar.nextSibling);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+
+                if (data.ok && data.data.accessToken) {
+                    localStorage.setItem('token', data.data.accessToken);
+                    // Update nav to show user menu
+                    document.getElementById('nav-guest').style.display = 'none';
+                    document.getElementById('nav-user').style.display = 'block';
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    modal.hide();
+                    // Reload page to show user data
+                    window.location.reload();
+                } else {
+                    alert('Login failed: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            // Update nav to show guest menu
+            document.getElementById('nav-guest').style.display = 'block';
+            document.getElementById('nav-user').style.display = 'none';
+            // Remove welcome message if exists
+            const welcomeDiv = document.querySelector('.bg-primary');
+            if (welcomeDiv) {
+                welcomeDiv.remove();
+            }
+            window.location.reload();
+        }
+    </script>
     </body>
 </html>
