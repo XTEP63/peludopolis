@@ -17,13 +17,6 @@ app.use(
 
 app.use(express.json())
 
-// Servir archivos del frontend
-app.use(
-  express.static(
-    path.join(__dirname, "../../frontend/src")
-  )
-)
-
 app.get("/health", (_req, res) => {
   res.status(200).json({
     ok: true,
@@ -63,23 +56,17 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 
 // Página de inicio
 app.get("/", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/index.html")
-  )
+  res.render('index', { user: null })
 })
 
 // Página de reviews
 app.get("/reviews", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/reviews.html")
-  )
+  res.render('reviews')
 })
 
 // Página de habitaciones
 app.get("/habitaciones", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/habitaciones.html")
-  )
+  res.render('habitaciones')
 })
 
 // Página de servicios

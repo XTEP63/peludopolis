@@ -6,7 +6,7 @@
     <title>Peludópolis | Hotel para Perros</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="./styles/main.css">
 </head>
 
 <body>
@@ -34,14 +34,13 @@
             <li class="nav-item"><a class="nav-link" href="/reviews">Reseñas</a></li>
             </ul>
 
-            <!-- Estado de autenticación -->
-            <div class="d-flex align-items-center gap-3" id="authNavArea">
-                <span id="authNavText" class="text-white small d-none d-md-inline">Invitado</span>
-                <a id="authOpenButton" role="button" style="cursor: pointer;" class="text-white text-decoration-none" 
-                    data-bs-toggle="modal" data-bs-target="#loginModal" aria-label="Cuenta">
-                    <i class="bi bi-person-circle fs-4"></i>
-                </a>
-                <button id="logoutButton" type="button" class="btn btn-sm btn-outline-light d-none">Cerrar sesión</button>
+            <!-- Iconos de usuarios -->
+            <div class="d-flex gap-3">
+            <!-- Cuenta de usuario -->
+            <a role="button" style="cursor: pointer;" class="text-white text-decoration-none" 
+                data-bs-toggle="modal" data-bs-target="#loginModal" aria-label="Cuenta">
+                <i class="bi bi-person-circle fs-4"></i>
+            </a>
             </div>
         </div>
         </div>
@@ -56,14 +55,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>  
                 <div class="modal-body">
-                    <form id="loginForm">
-                        <div id="loginAlert" class="alert d-none" role="alert"></div>
-
+                    <form>
                         <!-- Correo electrónico -->
                         <div class="mb-3">
-                            <label for="loginEmail" class="form-label">Correo electrónico</label>
+                            <label for="email" class="form-label">Correo electrónico</label>
                             <div class="input-group">
-                            <input type="email" class="form-control" id="loginEmail" name="email" placeholder="ejemplo@ejemplo.com" required>
+                            <input type="email" class="form-control" id="email" placeholder="ejemplo@ejemplo.com" required>
                             <span class="input-group-text">
                                 <i class="bi bi-envelope"></i>
                             </span>
@@ -72,9 +69,9 @@
 
                         <!-- Contraseña -->
                         <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <label for="password" class="form-label">Contraseña</label>
                             <div class="input-group">
-                            <input type="password" class="form-control" id="loginPassword" name="password" placeholder="*****" required>
+                            <input type="password" class="form-control" id="password" placeholder="*****" required>
                             <span class="input-group-text">
                                 <i class="bi bi-key"></i>
                             </span>
@@ -106,42 +103,41 @@
                 </div>  
 
                 <div class="modal-body">
-                    <form id="registerForm">
-                        <div id="registerAlert" class="alert d-none" role="alert"></div>
-
+                    <form>
+                    
                         <!-- Usuario -->
                         <div class="mb-3">
-                            <input id="registerUsername" name="username" type="text" class="form-control" placeholder="Usuario" required>
+                            <input type="text" class="form-control" placeholder="Usuario" required>
                         </div>
 
                         <!-- Correo electrónico -->
                         <div class="mb-3">
-                            <input id="registerEmail" name="email" type="email" class="form-control" placeholder="Correo electrónico" required>
+                            <input type="email" class="form-control" placeholder="Correo electrónico" required>
                         </div>
 
                         <!-- Nombre y Apellido -->
                         <div class="row mb-3">
                             <div class="col">
-                                <input id="registerFirstName" type="text" class='form-control' name="firstName" placeholder="Nombre" required>
+                            <input type="text" class='form-control' name="nombre" placeholder="Nombre" required>
                             </div>
                             <div class="col">
-                                <input id="registerLastName" type="text" class='form-control' name="lastName" placeholder="Apellido" required>
+                            <input type="text" class='form-control' name="apellido" placeholder="Apellido" required>
                             </div>
+                        </div>
+                        
+                        <!-- Correo electrónico -->
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Correo electrónico" required>
                         </div>
 
                         <!-- Contraseña -->
                         <div class="mb-3">
-                            <input id="registerPassword" name="password" type="password" class="form-control" placeholder="Contraseña" minlength="6" required>
+                            <input type="password" class="form-control" placeholder="Contraseña" required>
                         </div>
 
                         <!-- Teléfono -->
                         <div class="mb-3">
-                            <input id="registerPhone" name="phone" type="tel" class="form-control" placeholder="Teléfono">
-                        </div>
-
-                        <!-- Dirección -->
-                        <div class="mb-3">
-                            <input id="registerAddress" name="address" type="text" class="form-control" placeholder="Dirección">
+                            <input type="tel" class="form-control" placeholder="Teléfono" required>
                         </div>
 
                         <!-- Botón de registro -->
@@ -455,6 +451,5 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/api/auth.api.js"></script>
     </body>
 </html>
