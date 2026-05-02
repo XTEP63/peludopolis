@@ -6,8 +6,8 @@ interface createUser {
     passwordHash: string
     firstName: string
     lastName: string
-    phone?: string
-    address?: string
+    phone?: string | null
+    address?: string | null
 }
 
 export const findUserByEmail = async (email: string) => {
