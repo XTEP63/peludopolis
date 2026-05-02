@@ -18,7 +18,16 @@ interface Login {
 }
 
 export const registerUser = async (input: Register) => {
-    const existingUser = await authRepository.findUserByEmail(input.email)
+    if (!input.username || !input.email || !input.password || !input.firstName || !input.lastName) {
+        throw new Error("Faltan campos obligatorios")
+    }
+
+    if (input.password.length < 6) {
+        throw new Error("La contraseña debe tener al menos 6 caracteres")
+    }
+
+    const email = input.email.trim().toLowerCase()
+    const existingUser = await authRepository.findUserByEmail(email)
 
     if (existingUser) {
         throw new Error("El correo ya está registrado")
@@ -27,11 +36,11 @@ export const registerUser = async (input: Register) => {
     const passwordHash = await bcrypt.hash(input.password, 10)
 
     const user = await authRepository.createUser({
-        username: input.username,
-        email: input.email,
+        username: input.username.trim(),
+        email,
         passwordHash,
-        firstName: input.firstName,
-        lastName: input.lastName,
+        firstName: input.firstName.trim(),
+        lastName: input.lastName.trim(),
         phone: input.phone ?? null,
         address: input.address ?? null
     })
@@ -40,7 +49,12 @@ export const registerUser = async (input: Register) => {
 }
 
 export const loginUser = async (input: Login) => {
-    const user = await authRepository.findUserByEmail(input.email)
+    if (!input.email || !input.password) {
+        throw new Error("Correo y contraseña son obligatorios")
+    }
+
+    const email = input.email.trim().toLowerCase()
+    const user = await authRepository.findUserByEmail(email)
 
     if (!user) {
         throw new Error("Credenciales inválidas")

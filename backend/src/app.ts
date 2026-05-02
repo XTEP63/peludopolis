@@ -62,4 +62,31 @@ app.get("/habitaciones", (_req, res) => {
   )
 })
 
+// Página de servicios
+app.get("/servicios", (_req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/src/pages/servicios.html")
+  )
+})
+
+app.use((error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  const message = error.message || "Error interno del servidor"
+
+  const statusCode =
+    message.includes("Credenciales") ||
+    message.includes("Token") ||
+    message.includes("No autenticado")
+      ? 401
+      : message.includes("ya está registrado")
+        ? 409
+        : message.includes("obligatorios") || message.includes("contraseña")
+          ? 400
+          : 500
+
+  res.status(statusCode).json({
+    ok: false,
+    message
+  })
+})
+
 export default app;
