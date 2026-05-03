@@ -243,6 +243,23 @@ export const validatePatchService = (req: Request, res: Response, next: NextFunc
 };
 
 /* Validar una reservación */
+/* Validar la búsqueda de servicio con sus filtros op */
+export const validateReservationFilters = (req: Request, res: Response, next: NextFunction)=> { 
+    const { status, date } = req.query;
+
+    if (status !== undefined && !RES_STATUSES.includes(status as typeof RES_STATUSES[number])) {
+        return res.status(400).json({ ok: false, message: `status debe ser: ${RES_STATUSES.join(", ")}.` });
+        
+    }
+
+    if (date !== undefined && isNaN(Date.parse(date as string))) {
+        return res.status(400).json({ ok: false, message: "date debe ser una fecha válida (YYYY-MM-DD)." });
+    }
+
+    next();
+};
+
+
 /*Validar cuando se hace un cambio en el estado de la reservación */
 export const validateReservationStatus = (req: Request, res: Response, next: NextFunction) => {
     const { reservation_status } = req.body;

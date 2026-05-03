@@ -1,12 +1,13 @@
 import { Router } from "express";
 import * as usersCtrl from "../controllers/admin.users.controller";
 import * as roomsCtrl from "../controllers/admin.rooms.services.controllers";
+import * as resCtrl from "../controllers/admin.reservations.controller";
 import { verifyToken, isAdmin } from "../middlewares/auth.middleware";
 import {
     validateUserFilters, validatePatchUser, validateUserStatus, validatePetsFilters,
     validateRoomFilters, validateCreateRoom, validatePatchRoom, validateRoomStatus,
     validateServiceFilters, validateCreateService, validatePatchService,
-    validateIdParam,
+    validateIdParam, validateReservationFilters, validateReservationStatus
 } from "../middlewares/admin.middlewares";
 
 const router = Router();
@@ -33,4 +34,11 @@ router.post  ("/services",           verifyToken, isAdmin, validateCreateService
 router.patch ("/services/:id",       verifyToken, isAdmin, validateIdParam, validatePatchService, roomsCtrl.updateService);
 router.delete("/services/:id",       verifyToken, isAdmin, validateIdParam,         roomsCtrl.deleteService);
 
+
+// RESERVATIONS
+router.get   ("/reservations",                       verifyToken, isAdmin, validateReservationFilters,  resCtrl.getAll);
+router.get   ("/reservations/:id",                   verifyToken, isAdmin, validateIdParam,             resCtrl.getById);
+router.patch ("/reservations/:id/status",            verifyToken, isAdmin, validateIdParam, validateReservationStatus, resCtrl.updateStatus);
+router.patch ("/reservations/:id/check-in/confirm",  verifyToken, isAdmin, validateIdParam,             resCtrl.checkIn);
+router.patch ("/reservations/:id/check-out/confirm", verifyToken, isAdmin, validateIdParam,             resCtrl.checkOut);
 export default router;
