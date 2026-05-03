@@ -1,8 +1,11 @@
 import express from "express"
 import cors from "cors"
-import path from "path"
 import { env } from "./config/env"
 import authRoutes from './api/auth.routes'
+import adminRoutes from "./api/admin.routes"
+import usersRoutes from "./api/users.routes"
+import { AppError } from "./utils/errors"
+import { Request, Response, NextFunction } from "express"
 
 const app = express();
 
@@ -13,13 +16,6 @@ app.use(
 )
 
 app.use(express.json())
-
-// Servir archivos del frontend
-app.use(
-  express.static(
-    path.join(__dirname, "../../frontend/src")
-  )
-)
 
 app.get("/health", (_req, res) => {
   res.status(200).json({
@@ -39,54 +35,24 @@ app.get("/system/info", (_req, res) => {
   })
 })
 
-app.use('/auth', authRoutes)
+app.use('/auth', authRoutes);
+app.use("/admin", adminRoutes);
+app.use("/users", usersRoutes);
 
-// Página de inicio
-app.get("/", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/index.html")
-  )
-})
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err);
 
-// Página de reviews
-app.get("/reviews", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/reviews.html")
-  )
-})
+    if (err instanceof AppError) {
+        return res.status(err.statusCode).json({
+            ok: false,
+            message: err.message
+        });
+    }
 
-// Página de habitaciones
-app.get("/habitaciones", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/habitaciones.html")
-  )
-})
-
-// Página de servicios
-app.get("/servicios", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../../frontend/src/pages/servicios.html")
-  )
-})
-
-app.use((error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  const message = error.message || "Error interno del servidor"
-
-  const statusCode =
-    message.includes("Credenciales") ||
-    message.includes("Token") ||
-    message.includes("No autenticado")
-      ? 401
-      : message.includes("ya está registrado")
-        ? 409
-        : message.includes("obligatorios") || message.includes("contraseña")
-          ? 400
-          : 500
-
-  res.status(statusCode).json({
-    ok: false,
-    message
-  })
-})
+    return res.status(500).json({
+        ok: false,
+        message: "Error interno del servidor"
+    });
+});
 
 export default app;
