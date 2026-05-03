@@ -530,8 +530,8 @@
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
             try {
                 const response = await fetch('http://localhost:3000/auth/login', {
@@ -541,7 +541,7 @@
                 });
                 const data = await response.json();
 
-                if (data.ok && data.data.accessToken) {
+                if (data.ok && data.data?.accessToken) {
                     localStorage.setItem('token', data.data.accessToken);
                     // Update nav to show user menu
                     document.getElementById('nav-guest').style.display = 'none';
@@ -552,10 +552,14 @@
                     // Reload page to show user data
                     window.location.reload();
                 } else {
-                    alert('Login failed: ' + (data.message || 'Unknown error'));
+                    document.getElementById('loginAlert').classList.remove('d-none');
+                    document.getElementById('loginAlert').classList.add('alert-danger');
+                    document.getElementById('loginAlert').innerText = 'Login failed: ' + (data.message || 'Unknown error');
                 }
             } catch (error) {
-                alert('Error: ' + error.message);
+                document.getElementById('loginAlert').classList.remove('d-none');
+                document.getElementById('loginAlert').classList.add('alert-danger');
+                document.getElementById('loginAlert').innerText = 'Error: ' + error.message;
             }
         });
 
