@@ -2,13 +2,14 @@ import express from "express"
 import path from "path"
 
 const app = express();
+const rootDir = process.cwd();
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(rootDir, 'views'));
 
-app.use('/styles', express.static(path.join(__dirname, 'views/styles')));
-app.use('/assets', express.static(path.join(__dirname, 'views/assets')));
-app.use('/api', express.static(path.join(__dirname, 'src/api')));
+app.use('/styles', express.static(path.join(rootDir, 'views/styles')));
+app.use('/assets', express.static(path.join(rootDir, 'views/assets')));
+app.use('/api', express.static(path.join(rootDir, 'src/api')));
 
 // Página de inicio
 app.get("/", (_req, res) => {
@@ -52,6 +53,6 @@ app.get("/habitaciones", (_req, res) => {
 
 //Panel de admin
 app.get("/admin-panel", (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin.html'))
+  res.sendFile(path.join(rootDir, 'views', 'admin.html'))
 })
 export default app;
