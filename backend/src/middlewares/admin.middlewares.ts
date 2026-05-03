@@ -44,6 +44,8 @@ const PET_TYPES     = ["perro", "gato", "reptil", "ambos"] as const;
 const ROOM_SIZES    = ["pequeno", "mediano", "grande", "todos"] as const;
 const ROOM_STATUSES = ["disponible", "mantenimiento", "inactiva", "ocupada"] as const;
 const RES_STATUSES  = ["pendiente", "confirmada", "cancelada", "en_curso", "finalizada"] as const;
+const PAYMENT_METHODS  = ["efectivo", "transferencia", "tarjeta"] as const;
+const PAYMENT_STATUSES = ["pendiente", "pagado", "fallido", "reembolsado"] as const;
 
 /* Validación de los Usuarios*/
 
@@ -273,6 +275,24 @@ export const validateReservationStatus = (req: Request, res: Response, next: Nex
     next();
 };
 
+/* Validar los pagos */
+/* Validar la búsqueda de servicio con sus filtros op */
+export const validatePaymentFilters = (req: Request, res: Response, next: NextFunction): void => {
+    const { payment_method, payment_status } = req.query;
+
+    if (payment_method !== undefined && !PAYMENT_METHODS.includes(payment_method as typeof PAYMENT_METHODS[number])) {
+        res.status(400).json({ ok: false, message: `payment_method debe ser: ${PAYMENT_METHODS.join(", ")}.` });
+        return;
+    }
+
+    if (payment_status !== undefined && !PAYMENT_STATUSES.includes(payment_status as typeof PAYMENT_STATUSES[number])) {
+        res.status(400).json({ ok: false, message: `payment_status debe ser: ${PAYMENT_STATUSES.join(", ")}.` });
+        return;
+    }
+
+    next();
+};
+
 /* Validar los params de busqueda de los gets en general */
 export const validateIdParam = (req: Request, res: Response, next: NextFunction) => {
     const id = Number(req.params.id);
@@ -282,3 +302,4 @@ export const validateIdParam = (req: Request, res: Response, next: NextFunction)
 
     next();
 };
+
