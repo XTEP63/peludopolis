@@ -8,6 +8,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use('/styles', express.static(path.join(__dirname, 'views/styles')));
 app.use('/assets', express.static(path.join(__dirname, 'views/assets')));
+app.use('/api', express.static(path.join(__dirname, 'src/api')));
 
 // Página de inicio
 app.get("/", (_req, res) => {
