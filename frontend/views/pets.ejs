@@ -87,7 +87,7 @@
         let addPetModal;
 
         async function loadPets() {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('peludopolis_token');
             if (!token) {
                 window.location.href = '/';
                 return;
@@ -134,7 +134,8 @@
         }
 
         function logout() {
-            localStorage.removeItem('token');
+            localStorage.removeItem('peludopolis_token');
+            localStorage.removeItem('peludopolis_user');;
             window.location.href = '/';
         }
 
