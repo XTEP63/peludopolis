@@ -49,4 +49,8 @@ app.get("/habitaciones", (_req, res) => {
   res.render('habitaciones')
 })
 
+//Panel de admin
+app.get("/admin-panel", (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin.html'))
+})
 export default app;
