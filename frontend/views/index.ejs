@@ -34,14 +34,31 @@
             <li class="nav-item"><a class="nav-link" href="/reviews">Reseñas</a></li>
             </ul>
 
-            <!-- Estado de autenticación -->
-            <div class="d-flex align-items-center gap-3" id="authNavArea">
-                <span id="authNavText" class="text-white small d-none d-md-inline">Invitado</span>
-                <a id="authOpenButton" role="button" style="cursor: pointer;" class="text-white text-decoration-none" 
-                    data-bs-toggle="modal" data-bs-target="#loginModal" aria-label="Cuenta">
-                    <i class="bi bi-person-circle fs-4"></i>
-                </a>
-                <button id="logoutButton" type="button" class="btn btn-sm btn-outline-light d-none">Cerrar sesión</button>
+            <!-- Iconos de usuarios -->
+            <div class="d-flex gap-3" id="nav-auth">
+                <!-- Mostrar cuando NO está autenticado -->
+                <div id="nav-guest">
+                    <a role="button" style="cursor: pointer;" class="text-white text-decoration-none" 
+                        data-bs-toggle="modal" data-bs-target="#loginModal" aria-label="Cuenta">
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </a>
+                </div>
+                <!-- Mostrar cuando ESTÁ autenticado -->
+                <div id="nav-user" style="display: none;">
+                    <div class="dropdown">
+                        <a role="button" style="cursor: pointer;" class="text-white text-decoration-none dropdown-toggle" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle fs-4"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/me">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="/pets">Mis Mascotas</a></li>
+                            <li><a class="dropdown-item" href="/reservations">Mis Reservaciones</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         </div>

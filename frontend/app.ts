@@ -14,22 +14,29 @@ app.get("/", (_req, res) => {
   res.render('index', { user: null })
 })
 
+// Página de perfil del usuario (me)
 app.get("/me", (_req, res) => {
-    fetch('http://localhost:3000/auth/me', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXRvQGV4YW1wbGUuY29tIiwicm9sZSI6ImNsaWVudGUiLCJpYXQiOjE3Nzc2ODc4OTAsImV4cCI6MTc3NzY5NTA5MH0.zhUx_d8hqxXOq2_9suzAhNvf6M8uLZ9M7fylheXdGf4`
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.ok) {
-            res.render('me', { user: data.data })
-        } else {
-            res.render('me', { user: null })
-        }
-    })
+    res.render('me', { user: null })
+})
+
+// Página de perfil
+app.get("/profile", (_req, res) => {
+    res.render('profile', { user: null })
+})
+
+// Página de edición de perfil
+app.get("/profile/edit", (_req, res) => {
+    res.render('profile-edit', { user: null })
+})
+
+// Página de mascotas
+app.get("/pets", (_req, res) => {
+    res.render('pets', { user: null })
+})
+
+// Página de reservaciones
+app.get("/reservations", (_req, res) => {
+    res.render('reservations', { user: null })
 })
 
 // Página de reviews

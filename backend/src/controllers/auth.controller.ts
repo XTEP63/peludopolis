@@ -33,6 +33,8 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const authUser = req.user
 
+        console.log('Auth user:', authUser)
+
         if (!authUser) {
             return res.status(401).json({
                 ok: false,
@@ -42,12 +44,15 @@ export const me = async (req: Request, res: Response, next: NextFunction) => {
 
         const user = await authService.getCurrentUser(Number(authUser.sub))
 
+        console.log('User data:', user)
+
         res.status(200).json({
             ok: true,
             message: "Usuario autenticado",
             data: user
         })
     } catch (error) {
+        console.error('Error in me endpoint:', error)
         next(error)
     }
 }

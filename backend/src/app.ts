@@ -3,6 +3,7 @@ import cors from "cors"
 import { env } from "./config/env"
 import authRoutes from './api/auth.routes'
 import adminRoutes from "./api/admin.routes"
+import usersRoutes from "./api/users.routes"
 import { AppError } from "./utils/errors"
 import { Request, Response, NextFunction } from "express"
 
@@ -36,6 +37,7 @@ app.get("/system/info", (_req, res) => {
 
 app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/users", usersRoutes);
 
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err);
