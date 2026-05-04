@@ -6,9 +6,31 @@ VALUES
 
 INSERT INTO users (username,email,password_hash,first_name,last_name,phone,address,role,status,created_at)
 VALUES
-  ('admin01', 'admin@test.com', 'hashed_password', 'Admin', 'Principal', '5512345678', 'Guadalajara', 'admin', 'activo', NOW()),
-  ('user01', 'user@test.com', 'hashed_password', 'Juan', 'Perez', '5587654321', 'Zapopan', 'cliente', 'activo', NOW());
-
+  (
+    'admin01',
+    'admin@test.com',
+    '$2b$10$xIKNNWzx7CNQsJI.H.Dj1eiF/A65FiEL5g/.Nt06URRKb1E.vEtWG',
+    'Admin',
+    'Principal',
+    '5512345678',
+    'Guadalajara',
+    'admin',
+    'activo',
+    NOW()
+  ),
+  (
+    'user01',
+    'user@test.com',
+    '$2b$10$ljVgfY/1hFK3uzWsuQNC0.6sMvlcv9bjRAr29x0lpvYYFhMxxhxQ.',
+    'Juan',
+    'Perez',
+    '5587654321',
+    'Zapopan',
+    'cliente',
+    'activo',
+    NOW()
+  );
+  
 INSERT INTO pets (user_id, name, species, breed, age, weight, size, sex, color, allergies, notes, status)
 VALUES
   (1,'Max','perro','Labrador',3,28.50,'grande','macho','dorado',NULL,'Muy activo y juguetón','activo'),
