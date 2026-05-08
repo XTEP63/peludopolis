@@ -5,6 +5,7 @@ import authRoutes from './api/auth.routes'
 import adminRoutes from "./api/admin.routes"
 import usersRoutes from "./api/users.routes"
 import reservationsRoutes from "./api/reservations.routes"
+import paymentsRoutes from "./api/payments.routes"
 import { AppError } from "./utils/errors"
 import { Request, Response, NextFunction } from "express"
 
@@ -40,6 +41,7 @@ app.use('/auth', authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/users", usersRoutes);
 app.use("/reservations", reservationsRoutes);
+app.use("/payments", paymentsRoutes);
 
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err);
