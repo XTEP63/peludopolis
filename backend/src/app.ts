@@ -48,6 +48,13 @@ app.get("/", (_req, res) => {
   )
 })
 
+// Ruta para detalle de habitación
+app.get("/habitacion", (_req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../frontend/src/pages/habitacion.html")
+  )
+})
+
 // Página de reviews
 app.get("/reviews", (_req, res) => {
   res.sendFile(
