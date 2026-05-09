@@ -46,6 +46,11 @@ app.get("/reviews", (_req, res) => {
   res.render('reviews')
 })
 
+// Página de servicios
+app.get(["/servicios", "/services"], (_req, res) => {
+  res.render("servicios", { user: null })
+})
+
 // Página de habitaciones
 app.get("/habitaciones", (_req, res) => {
   res.render('habitaciones')
