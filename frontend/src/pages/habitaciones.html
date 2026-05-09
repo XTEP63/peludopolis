@@ -15,7 +15,7 @@
     <div class="container">
 
       <!-- Marca/Logo -->
-      <a class="navbar-brand fw-bold" href="index.html">
+      <a class="navbar-brand fw-bold" href="/">
         <i class="bi bi-house-heart"></i> Peludópolis
       </a>
 
@@ -28,8 +28,9 @@
       <!-- Menú de navegación -->
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="/index">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="servicios">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/habitaciones">Habitaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
           <li class="nav-item"><a class="nav-link" href="/reviews">Reseñas</a></li>
         </ul>
       </div>
@@ -115,192 +116,210 @@
         <div class="row g-4" id="rooms">
 
           <!-- Hab 1 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="chico" data-price="350" data-theme="clasica">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/SMD.jpg" class="card-img-top hab_img" alt="Suite Mini Dog">
-                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Suite Mini Dog</h5>
-                  <span class="badge bg-primary">Clásica</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="1" data-type="perro" data-size="chico" data-price="350" data-theme="clasica">
+            <a href="/habitacion?id=1" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/SMD.jpg" class="card-img-top hab_img" alt="Suite Mini Dog">
+                  <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
-                <p class="card-text flex-grow-1">Perfecto para perros pequeños y tranquilos.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Hasta 10kg
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$350 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Suite Mini Dog</h5>
+                    <span class="badge bg-primary">Clásica</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Perfecto para perros pequeños y tranquilos.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Hasta 10kg
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$350 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 2 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="mediano" data-price="550" data-theme="clasica">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/SDC.jpg" class="card-img-top hab_img">
-                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Suite Dog Comfort</h5>
-                  <span class="badge bg-primary">Clásica</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="2" data-type="perro" data-size="mediano" data-price="550" data-theme="clasica">
+            <a href="/habitacion?id=2" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/SDC.jpg" class="card-img-top hab_img">
+                  <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
-                <p class="card-text flex-grow-1">Ideal para perros activos.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> 10kg a 25kg
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$550 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Suite Dog Comfort</h5>
+                    <span class="badge bg-primary">Clásica</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Ideal para perros activos.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> 10kg a 25kg
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$550 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 3 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="gato" data-size="chico" data-price="400" data-theme="clasica">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/SF.png" class="card-img-top hab_img">
-                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Suite Felina</h5>
-                  <span class="badge bg-primary">Clásica</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="3" data-type="gato" data-size="chico" data-price="400" data-theme="clasica">
+            <a href="/habitacion?id=3" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/SF.png" class="card-img-top hab_img">
+                  <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
-                <p class="card-text flex-grow-1">Espacio tranquilo para gatos.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Arenero incluido
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$400 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Suite Felina</h5>
+                    <span class="badge bg-primary">Clásica</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Espacio tranquilo para gatos.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Arenero incluido
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$400 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 4 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro gato" data-size="mediano" data-price="850" data-theme="tematica">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/INT.jpeg" class="card-img-top hab_img">
-                <span class="badge bg-warning position-absolute top-0 end-0 m-2">Popular</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Suite Interestelar</h5>
-                  <span class="badge bg-danger">Temática</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="4" data-type="perro gato" data-size="mediano" data-price="850" data-theme="tematica">
+            <a href="/habitacion?id=4" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/INT.jpeg" class="card-img-top hab_img">
+                  <span class="badge bg-warning position-absolute top-0 end-0 m-2">Popular</span>
                 </div>
-                <p class="card-text flex-grow-1">Decoración espacial con luces LED.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Proyector incluido
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$850 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Suite Interestelar</h5>
+                    <span class="badge bg-danger">Temática</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Decoración espacial con luces LED.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Proyector incluido
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$850 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 5 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro gato" data-size="chico" data-price="650" data-theme="lujo">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/ZEN.jpg" class="card-img-top hab_img">
-                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Jardín Zen</h5>
-                  <span class="badge bg-warning">Lujo</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="5" data-type="perro gato" data-size="chico" data-price="650" data-theme="lujo">
+            <a href="/habitacion?id=5" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/ZEN.jpg" class="card-img-top hab_img">
+                  <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
-                <p class="card-text flex-grow-1">Ambiente relajante.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Música relajante
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$650 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Jardín Zen</h5>
+                    <span class="badge bg-warning">Lujo</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Ambiente relajante.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Música relajante
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$650 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 6 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="grande" data-price="1000" data-theme="tematica">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/CM.jpg" class="card-img-top hab_img">
-                <span class="badge bg-danger position-absolute top-0 end-0 m-2">VIP</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Castillo Medieval</h5>
-                  <span class="badge bg-danger">Temática</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="6" data-type="perro" data-size="grande" data-price="1000" data-theme="tematica">
+            <a href="/habitacion?id=6" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/CM.jpg" class="card-img-top hab_img">
+                  <span class="badge bg-danger position-absolute top-0 end-0 m-2">VIP</span>
                 </div>
-                <p class="card-text flex-grow-1">Decoración de castillo.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Fotografía incluida
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$1000 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Castillo Medieval</h5>
+                    <span class="badge bg-danger">Temática</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Decoración de castillo.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Fotografía incluida
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$1000 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 7 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="mediano" data-price="700" data-theme="aventura">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/BE.jpg" class="card-img-top hab_img">
-                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Bosque Encantado</h5>
-                  <span class="badge bg-info">Aventura</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="7" data-type="perro" data-size="mediano" data-price="700" data-theme="aventura">
+            <a href="/habitacion?id=7" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/BE.jpg" class="card-img-top hab_img">
+                  <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
-                <p class="card-text flex-grow-1">Temática de naturaleza.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Área de exploración
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$700 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Bosque Encantado</h5>
+                    <span class="badge bg-info">Aventura</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Temática de naturaleza.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Área de exploración
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$700 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 8 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="perro" data-size="grande" data-price="1200" data-theme="lujo">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/PTH.jpg" class="card-img-top hab_img">
-                <span class="badge bg-info position-absolute top-0 end-0 m-2">Exclusivo</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Penthouse VIP</h5>
-                  <span class="badge bg-warning">Lujo</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="8" data-type="perro" data-size="grande" data-price="1200" data-theme="lujo">
+            <a href="/habitacion?id=8" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/PTH.jpg" class="card-img-top hab_img">
+                  <span class="badge bg-info position-absolute top-0 end-0 m-2">Exclusivo</span>
                 </div>
-                <p class="card-text flex-grow-1">Máximo lujo.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Mayordomo incluido
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$1200 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Penthouse VIP</h5>
+                    <span class="badge bg-warning">Lujo</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Máximo lujo.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Mayordomo incluido
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$1200 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
 
           <!-- Hab 9 -->
-          <div class="col-md-6 col-xl-4 room-card" data-type="exotico" data-size="mediano" data-price="900" data-theme="clasica">
-            <div class="card h-100 shadow-sm room-hover">
-              <div class="position-relative">
-                <img src="../assets/ter.jpg" class="card-img-top hab_img">
-                <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
-              </div>
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between mb-2">
-                  <h5 class="card-title mb-0">Terrario Exótico</h5>
-                  <span class="badge bg-primary">Clásica</span>
+          <div class="col-md-6 col-xl-4 room-card" data-id="9" data-type="exotico" data-size="mediano" data-price="900" data-theme="clasica">
+            <a href="/habitacion?id=9" class="text-decoration-none text-dark">
+              <div class="card h-100 shadow-sm room-hover">
+                <div class="position-relative">
+                  <img src="../assets/ter.jpg" class="card-img-top hab_img">
+                  <span class="badge bg-success position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
-                <p class="card-text flex-grow-1">Clima controlado.</p>
-                <span class="badge bg-light text-dark border mb-2">
-                  <i class="bi bi-info-circle"></i> Control temperatura
-                </span>
-                <p class="fw-bold mt-auto" style="color:#4f737f;">$900 MXN/noche</p>
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="card-title mb-0">Terrario Exótico</h5>
+                    <span class="badge bg-primary">Clásica</span>
+                  </div>
+                  <p class="card-text flex-grow-1">Clima controlado.</p>
+                  <span class="badge bg-light text-dark border mb-2">
+                    <i class="bi bi-info-circle"></i> Control temperatura
+                  </span>
+                  <p class="fw-bold mt-auto" style="color:#4f737f;">$900 MXN/noche</p>
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -387,5 +406,99 @@
 
   <!-- =bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Variables globales
+    const filterTypeSelect = document.getElementById('filter-type');
+    const filterSizeSelect = document.getElementById('filter-size');
+    const filterThemeSelect = document.getElementById('filter-theme');
+    const filterPriceInput = document.getElementById('filter-price');
+    const priceValueSpan = document.getElementById('priceValue');
+    const resultCountSpan = document.getElementById('resultCount');
+    const clearFiltersButton = document.getElementById('clearFilters');
+    const roomCards = document.querySelectorAll('.room-card');
+
+    // Función para filtrar habitaciones
+    function filterRooms() {
+      const selectedType = filterTypeSelect.value;
+      const selectedSize = filterSizeSelect.value;
+      const selectedTheme = filterThemeSelect.value;
+      const selectedPrice = parseInt(filterPriceInput.value);
+
+      let visibleCount = 0;
+
+      roomCards.forEach(card => {
+        const cardType = card.getAttribute('data-type');
+        const cardSize = card.getAttribute('data-size');
+        const cardTheme = card.getAttribute('data-theme');
+        const cardPrice = parseInt(card.getAttribute('data-price'));
+
+        let showCard = true;
+
+        // Aplicar filtro de tipo (maneja tipos múltiples)
+        if (selectedType !== 'Todos') {
+          showCard = showCard && cardType.includes(selectedType);
+        }
+
+        // Aplicar filtro de tamaño
+        if (selectedSize !== 'Todos') {
+          showCard = showCard && cardSize === selectedSize;
+        }
+
+        // Aplicar filtro de temática
+        if (selectedTheme !== 'Todos') {
+          showCard = showCard && cardTheme === selectedTheme;
+        }
+
+        // Aplicar filtro de precio
+        showCard = showCard && cardPrice <= selectedPrice;
+
+        // Mostrar u ocultar la tarjeta
+        if (showCard) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Actualizar contador de resultados
+      resultCountSpan.textContent = visibleCount;
+    }
+
+    // Función para limpiar filtros
+    function clearFilters() {
+      filterTypeSelect.value = 'Todos';
+      filterSizeSelect.value = 'Todos';
+      filterThemeSelect.value = 'Todos';
+      filterPriceInput.value = '1200';
+      priceValueSpan.textContent = '1200';
+      filterRooms();
+    }
+
+    // Event listeners para los filtros
+    filterTypeSelect.addEventListener('change', () => {
+      filterRooms();
+    });
+
+    filterSizeSelect.addEventListener('change', () => {
+      filterRooms();
+    });
+
+    filterThemeSelect.addEventListener('change', () => {
+      filterRooms();
+    });
+
+    filterPriceInput.addEventListener('input', () => {
+      priceValueSpan.textContent = filterPriceInput.value;
+      filterRooms();
+    });
+
+    // Event listener para limpiar filtros
+    clearFiltersButton.addEventListener('click', clearFilters);
+
+    // Inicializar
+    filterRooms();
+  </script>
 </body>
 </html>
