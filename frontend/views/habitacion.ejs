@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalle de habitación | Peludópolis</title>
+
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="/styles/habitaciones.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">
+        <i class="bi bi-house-heart"></i> Peludópolis
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/habitaciones">Habitaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="/reviews">Reseñas</a></li>
+        </ul>
+
+        <div id="nav-guest">
+          <a role="button" class="text-white text-decoration-none" href="/" aria-label="Cuenta">
+            <i class="bi bi-person-circle fs-4"></i>
+          </a>
+        </div>
+
+        <div id="nav-user" style="display: none;">
+          <div class="dropdown">
+            <a role="button"
+               class="text-white text-decoration-none dropdown-toggle d-flex align-items-center gap-2"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+              <i class="bi bi-person-circle fs-4"></i>
+              <span id="navUserName">Usuario</span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/me">Mi Perfil</a></li>
+              <li><a class="dropdown-item" href="/pets">Mis Mascotas</a></li>
+              <li><a class="dropdown-item" href="/reservations">Mis Reservaciones</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item" type="button" id="logoutButton">Cerrar Sesión</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <div class="mb-4">
+      <a href="/habitaciones" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Volver a habitaciones
+      </a>
+    </div>
+
+    <div id="roomAlert" class="alert d-none" role="alert"></div>
+
+    <section id="loadingState" class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+      <p class="text-muted mt-3">Cargando detalle de habitación...</p>
+    </section>
+
+    <section id="roomDetail" class="d-none"></section>
+  </main>
+
+  <script>
+    const API_BASE_URL = "http://localhost:3000";
+    const TOKEN_KEY = "peludopolis_token";
+    const SELECTED_ROOM_KEY = "peludopolis_selected_room";
+
+    const params = new URLSearchParams(window.location.search);
+    const roomId = params.get("id");
+
+    const loadingState = document.getElementById("loadingState");
+    const roomDetail = document.getElementById("roomDetail");
+    const roomAlert = document.getElementById("roomAlert");
+
+    let currentRoom = null;
+
+    const showAlert = (type, message) => {
+      roomAlert.className = `alert alert-${type}`;
+      roomAlert.textContent = message;
+    };
+
+    const hideAlert = () => {
+      roomAlert.className = "alert d-none";
+      roomAlert.textContent = "";
+    };
+
+    const formatMoney = (value) => {
+      return new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN"
+      }).format(Number(value || 0));
+    };
+
+    const normalizeImage = (imageUrl) => {
+      if (!imageUrl) return "/assets/Habitaciones.jpg";
+      if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://") || imageUrl.startsWith("/")) {
+        return imageUrl;
+      }
+      return `/assets/${imageUrl}`;
+    };
+
+    const normalizeRoom = (room) => ({
+      id: room.id || room.room_id,
+      name: room.name || room.room_name || room.nombre_habitacion || "Habitación",
+      petType: room.pet_type_allowed || room.tipo_mascota_permitida || room.type || "N/A",
+      size: room.size_allowed || room.tamaño_permitido || room.tamano_permitido || room.size || "N/A",
+      price: Number(room.price_per_night || room.precio_noche || room.price || 0),
+      description: room.description || room.descripcion || "Sin descripción disponible.",
+      status: room.status || room.estado || "disponible",
+      capacity: room.capacity || room.capacidad || 1,
+      imageUrl: normalizeImage(room.image_url || room.imagen_url || room.imageUrl),
+      createdAt: room.created_at || room.createdAt || null,
+      updatedAt: room.updated_at || room.updatedAt || null
+    });
+
+    const labelForPetType = (value) => {
+      const labels = {
+        perro: "Perro",
+        gato: "Gato",
+        reptil: "Reptil",
+        ambos: "Perro/Gato"
+      };
+      return labels[value] || value || "N/A";
+    };
+
+    const labelForSize = (value) => {
+      const labels = {
+        pequeno: "Pequeño",
+        chico: "Pequeño",
+        mediano: "Mediano",
+        grande: "Grande",
+        todos: "Todos"
+      };
+      return labels[value] || value || "N/A";
+    };
+
+    const renderRoom = (room) => {
+      const statusClass = room.status === "disponible" ? "bg-success" : "bg-secondary";
+
+      roomDetail.innerHTML = `
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-7">
+            <div class="card border-0 shadow-sm overflow-hidden">
+              <div class="position-relative">
+                <img src="${room.imageUrl}" class="w-100" style="max-height: 460px; object-fit: cover;" alt="${room.name}">
+                <span class="badge ${statusClass} position-absolute top-0 end-0 m-3 fs-6">
+                  ${room.status}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+              <div class="card-body p-4">
+                <h1 class="fw-bold mb-2">${room.name}</h1>
+                <p class="text-muted mb-4">${room.description}</p>
+
+                <div class="row g-3 mb-4">
+                  <div class="col-6">
+                    <div class="border rounded p-3 h-100">
+                      <small class="text-muted d-block">Tipo de mascota</small>
+                      <strong>${labelForPetType(room.petType)}</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="border rounded p-3 h-100">
+                      <small class="text-muted d-block">Tamaño permitido</small>
+                      <strong>${labelForSize(room.size)}</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="border rounded p-3 h-100">
+                      <small class="text-muted d-block">Capacidad</small>
+                      <strong>${room.capacity} mascota(s)</strong>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="border rounded p-3 h-100">
+                      <small class="text-muted d-block">Precio por noche</small>
+                      <strong style="color:#4f737f;">${formatMoney(room.price)}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button id="reserveRoomBtn" type="button" class="btn btn-primary btn-lg">
+                    <i class="bi bi-calendar-check"></i> Reservar esta habitación
+                  </button>
+
+                  <a href="/habitaciones" class="btn btn-outline-secondary">
+                    Ver más habitaciones
+                  </a>
+                </div>
+
+                <p class="text-muted small mt-3 mb-0">
+                  La reservación se completa en la sección de Mis Reservaciones.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("reserveRoomBtn").addEventListener("click", () => {
+        const token = localStorage.getItem(TOKEN_KEY);
+
+        if (!token) {
+          showAlert("warning", "Inicia sesión antes de reservar una habitación.");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+
+        localStorage.setItem(SELECTED_ROOM_KEY, JSON.stringify(room));
+        window.location.href = `/reservations?roomId=${room.id}`;
+      });
+    };
+
+    const loadRoom = async () => {
+      hideAlert();
+
+      if (!roomId) {
+        loadingState.classList.add("d-none");
+        showAlert("danger", "No se recibió el ID de la habitación.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/rooms/${roomId}`);
+        const payload = await response.json();
+
+        if (!response.ok || payload.ok === false) {
+          throw new Error(payload.message || "No se pudo cargar la habitación");
+        }
+
+        const rawRoom = payload.data || payload;
+        currentRoom = normalizeRoom(rawRoom);
+
+        loadingState.classList.add("d-none");
+        roomDetail.classList.remove("d-none");
+        renderRoom(currentRoom);
+      } catch (error) {
+        loadingState.classList.add("d-none");
+        showAlert("danger", `${error.message}. Revisa que el backend tenga GET /rooms/:id público.`);
+      }
+    };
+
+    loadRoom();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/api/auth.api.js"></script>
+</body>
+</html>
