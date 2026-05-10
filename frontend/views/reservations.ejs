@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Reservaciones - Peludópolis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <style>
+    :root {
+      --peludo-primary: #4c4163;
+      --peludo-soft: #f7f4fb;
+      --peludo-border: #e6dff0;
+    }
+
+    body {
+      background: var(--peludo-soft);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: var(--peludo-primary) !important;
+    }
+
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+      color: #fff !important;
+    }
+
+    .page-header {
+      background: #fff;
+      border: 1px solid var(--peludo-border);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(76, 65, 99, 0.08);
+    }
+
+    .stat-card,
+    .reservation-card,
+    .empty-state {
+      background: #fff;
+      border: 1px solid var(--peludo-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(76, 65, 99, 0.07);
+    }
+
+    .stat-card {
+      padding: 20px;
+    }
+
+    .stat-card .value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--peludo-primary);
+    }
+
+    .reservation-card {
+      padding: 22px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .reservation-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(76, 65, 99, 0.11);
+    }
+
+    .badge-status {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .badge-pendiente { background: #fff3cd; color: #856404; }
+    .badge-confirmada { background: #d1e7dd; color: #0f5132; }
+    .badge-en_curso { background: #cff4fc; color: #055160; }
+    .badge-finalizada { background: #e2e3e5; color: #41464b; }
+    .badge-cancelada { background: #f8d7da; color: #842029; }
+    .badge-pagado { background: #d1e7dd; color: #0f5132; }
+    .badge-sin_pago { background: #fff3cd; color: #856404; }
+
+    .btn-peludo {
+      background: var(--peludo-primary);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-peludo:hover {
+      background: #3c334f;
+      color: #fff;
+    }
+
+    .muted-label {
+      color: #6c6578;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .amount {
+      color: var(--peludo-primary);
+      font-weight: 800;
+    }
+
+    .detail-section {
+      border: 1px solid var(--peludo-border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+      margin-bottom: 14px;
+    }
+
+    .loading-shell {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">Peludópolis</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <a class="nav-link" href="/">Inicio</a>
+          <a class="nav-link" href="/servicios">Servicios</a>
+          <a class="nav-link" href="/habitaciones">Habitaciones</a>
+          <a class="nav-link" href="/pets">Mascotas</a>
+          <a class="nav-link active" href="/reservations">Reservaciones</a>
+          <a class="nav-link" href="/profile">Perfil</a>
+          <button id="logoutButton" type="button" class="btn btn-sm btn-outline-light ms-lg-2">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <section class="page-header mb-4">
+      <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+        <div>
+          <p class="text-uppercase text-muted fw-bold small mb-1">Panel del cliente</p>
+          <h1 class="mb-2">Mis reservaciones</h1>
+          <p class="mb-0 text-muted">Consulta tu historial, cancela reservaciones pendientes o confirmadas y registra pagos simulados.</p>
+        </div>
+        <div class="text-lg-end">
+          <button class="btn btn-outline-secondary" type="button" disabled title="Depende de la integración de habitaciones de Isa">
+            <i class="bi bi-plus-circle me-1"></i>
+            Nueva reservación próximamente
+          </button>
+          <div class="small text-muted mt-2">Crear reservaciones se habilita cuando exista el catálogo público de habitaciones.</div>
+        </div>
+      </div>
+    </section>
+
+    <div id="pageAlert" class="alert d-none" role="alert"></div>
+
+    <section class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="muted-label">Reservaciones</div>
+          <div id="totalReservations" class="value">0</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="muted-label">Activas</div>
+          <div id="activeReservations" class="value">0</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="muted-label">Pagadas</div>
+          <div id="paidReservations" class="value">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card border-0 shadow-sm mb-4" style="border-radius: 18px;">
+      <div class="card-body p-3 p-lg-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-6">
+            <label for="searchInput" class="form-label">Buscar</label>
+            <input id="searchInput" type="search" class="form-control" placeholder="Habitación, estado, fecha...">
+          </div>
+          <div class="col-md-4">
+            <label for="statusFilter" class="form-label">Estado</label>
+            <select id="statusFilter" class="form-select">
+              <option value="all">Todos</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="en_curso">En curso</option>
+              <option value="finalizada">Finalizada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </div>
+          <div class="col-md-2 d-grid">
+            <button id="refreshButton" type="button" class="btn btn-peludo">
+              <i class="bi bi-arrow-clockwise me-1"></i>
+              Recargar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reservationsContainer">
+      <div class="loading-shell">
+        <div class="text-center">
+          <div class="spinner-border" role="status"></div>
+          <p class="mt-3 text-muted">Cargando reservaciones...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="reservationDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalle de reservación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div id="reservationDetailBody" class="modal-body">
+          <div class="text-center py-4">
+            <div class="spinner-border" role="status"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="paymentForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Registrar pago</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="paymentReservationId">
+
+            <div id="paymentAlert" class="alert d-none" role="alert"></div>
+
+            <div class="detail-section mb-3">
+              <div class="muted-label">Reservación</div>
+              <div id="paymentReservationTitle" class="fw-bold">—</div>
+              <div class="muted-label mt-2">Monto a pagar</div>
+              <div id="paymentAmount" class="amount fs-4">$0.00</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="paymentMethod" class="form-label">Método de pago</label>
+              <select id="paymentMethod" class="form-select" required>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="efectivo">Efectivo</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="transactionReference" class="form-label">Referencia</label>
+              <input id="transactionReference" type="text" class="form-control" placeholder="SIM-123456">
+              <div class="form-text">Para el proyecto escolar usamos pago simulado.</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button id="submitPaymentButton" type="submit" class="btn btn-peludo">Confirmar pago</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const API_BASE_URL = window.location.port === "3000" ? window.location.origin : "http://localhost:3000";
+    const TOKEN_KEY = "peludopolis_token";
+    const USER_KEY = "peludopolis_user";
+
+    let reservations = [];
+    let payments = [];
+    let detailModal;
+    let paymentModal;
+
+    const formatMoney = (value) => {
+      const number = Number(value || 0);
+      return number.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+    };
+
+    const formatDate = (value) => {
+      if (!value) return "—";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return String(value);
+      return date.toLocaleDateString("es-MX", { year: "numeric", month: "short", day: "2-digit" });
+    };
+
+    const normalizeStatus = (status) => String(status || "pendiente").toLowerCase();
+
+    const getToken = () => localStorage.getItem(TOKEN_KEY);
+
+    const getStoredUser = () => {
+      try {
+        return JSON.parse(localStorage.getItem(USER_KEY) || "null");
+      } catch {
+        return null;
+      }
+    };
+
+    const showPageAlert = (message, type = "danger") => {
+      const alert = document.getElementById("pageAlert");
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+    };
+
+    const clearPageAlert = () => {
+      const alert = document.getElementById("pageAlert");
+      alert.className = "alert d-none";
+      alert.textContent = "";
+    };
+
+    const showPaymentAlert = (message, type = "danger") => {
+      const alert = document.getElementById("paymentAlert");
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+    };
+
+    const clearPaymentAlert = () => {
+      const alert = document.getElementById("paymentAlert");
+      alert.className = "alert d-none";
+      alert.textContent = "";
+    };
+
+    const apiRequest = async (path, options = {}) => {
+      const token = getToken();
+      if (!token) {
+        window.location.href = "/";
+        throw new Error("Debes iniciar sesión.");
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`
+      };
+
+      const response = await fetch(`${API_BASE_URL}${path}`, {
+        ...options,
+        headers
+      });
+
+      const contentType = response.headers.get("content-type") || "";
+      const body = contentType.includes("application/json") ? await response.json() : null;
+
+      if (!response.ok || body?.ok === false) {
+        throw new Error(body?.message || `Error HTTP ${response.status}`);
+      }
+
+      return body;
+    };
+
+    const logout = () => {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      window.location.href = "/";
+    };
+
+    const reservationHasPaidPayment = (reservationId) => {
+      return payments.some((payment) => {
+        const paymentReservationId = Number(payment.reservation_id || payment.reservationId);
+        const status = String(payment.payment_status || payment.paymentStatus || "").toLowerCase();
+        return paymentReservationId === Number(reservationId) && status === "pagado";
+      });
+    };
+
+    const isPayable = (reservation) => {
+      const status = normalizeStatus(reservation.reservation_status || reservation.status);
+      return ["pendiente", "confirmada"].includes(status) && !reservationHasPaidPayment(reservation.id);
+    };
+
+    const isCancelable = (reservation) => {
+      const status = normalizeStatus(reservation.reservation_status || reservation.status);
+      return ["pendiente", "confirmada"].includes(status);
+    };
+
+    const statusBadge = (status) => {
+      const normalized = normalizeStatus(status);
+      return `<span class="badge-status badge-${normalized}">${normalized.replace("_", " ")}</span>`;
+    };
+
+    const paymentBadge = (reservation) => {
+      if (reservationHasPaidPayment(reservation.id)) {
+        return `<span class="badge-status badge-pagado">pagado</span>`;
+      }
+      return `<span class="badge-status badge-sin_pago">sin pago</span>`;
+    };
+
+    const getReservationSearchText = (reservation) => [
+      reservation.id,
+      reservation.room_name,
+      reservation.roomName,
+      reservation.reservation_status,
+      reservation.status,
+      reservation.start_date,
+      reservation.end_date,
+      reservation.notes
+    ].filter(Boolean).join(" ").toLowerCase();
+
+    const getFilteredReservations = () => {
+      const search = document.getElementById("searchInput").value.trim().toLowerCase();
+      const status = document.getElementById("statusFilter").value;
+
+      return reservations.filter((reservation) => {
+        const reservationStatus = normalizeStatus(reservation.reservation_status || reservation.status);
+        const matchesStatus = status === "all" || reservationStatus === status;
+        const matchesSearch = !search || getReservationSearchText(reservation).includes(search);
+        return matchesStatus && matchesSearch;
+      });
+    };
+
+    const updateStats = () => {
+      const activeStatuses = new Set(["pendiente", "confirmada", "en_curso"]);
+      const activeCount = reservations.filter((r) => activeStatuses.has(normalizeStatus(r.reservation_status || r.status))).length;
+      const paidCount = reservations.filter((r) => reservationHasPaidPayment(r.id)).length;
+
+      document.getElementById("totalReservations").textContent = reservations.length;
+      document.getElementById("activeReservations").textContent = activeCount;
+      document.getElementById("paidReservations").textContent = paidCount;
+    };
+
+    const renderReservations = () => {
+      updateStats();
+      const container = document.getElementById("reservationsContainer");
+      const filtered = getFilteredReservations();
+
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div class="empty-state p-5 text-center">
+            <i class="bi bi-calendar2-x fs-1 text-muted"></i>
+            <h3 class="mt-3">No hay reservaciones para mostrar</h3>
+            <p class="text-muted mb-0">Cuando tengas reservaciones reales, aparecerán aquí con su estado y opciones de pago.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="row g-3">
+          ${filtered.map((reservation) => {
+            const status = reservation.reservation_status || reservation.status;
+            const roomName = reservation.room_name || reservation.roomName || `Habitación #${reservation.room_id || reservation.roomId || "—"}`;
+            const total = reservation.total || reservation.reservation_total || 0;
+            const canPay = isPayable(reservation);
+            const canCancel = isCancelable(reservation);
+
+            return `
+              <div class="col-12">
+                <article class="reservation-card">
+                  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                    <div>
+                      <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                        <h4 class="mb-0">${roomName}</h4>
+                        ${statusBadge(status)}
+                        ${paymentBadge(reservation)}
+                      </div>
+                      <div class="text-muted mb-2">Reservación #${reservation.id}</div>
+                      <div class="row g-3">
+                        <div class="col-sm-auto">
+                          <div class="muted-label">Entrada</div>
+                          <div class="fw-semibold">${formatDate(reservation.start_date || reservation.startDate)}</div>
+                        </div>
+                        <div class="col-sm-auto">
+                          <div class="muted-label">Salida</div>
+                          <div class="fw-semibold">${formatDate(reservation.end_date || reservation.endDate)}</div>
+                        </div>
+                        <div class="col-sm-auto">
+                          <div class="muted-label">Total</div>
+                          <div class="amount">${formatMoney(total)}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex flex-wrap align-content-start gap-2 justify-content-lg-end">
+                      <button type="button" class="btn btn-outline-secondary" onclick="openReservationDetail(${reservation.id})">
+                        <i class="bi bi-eye me-1"></i>Detalle
+                      </button>
+                      <button type="button" class="btn btn-peludo" onclick="openPaymentModal(${reservation.id})" ${canPay ? "" : "disabled"}>
+                        <i class="bi bi-credit-card me-1"></i>Pagar
+                      </button>
+                      <button type="button" class="btn btn-outline-danger" onclick="cancelReservation(${reservation.id})" ${canCancel ? "" : "disabled"}>
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    };
+
+    const loadReservations = async () => {
+      clearPageAlert();
+      const container = document.getElementById("reservationsContainer");
+      container.innerHTML = `
+        <div class="loading-shell">
+          <div class="text-center">
+            <div class="spinner-border" role="status"></div>
+            <p class="mt-3 text-muted">Cargando reservaciones...</p>
+          </div>
+        </div>
+      `;
+
+      try {
+        const [reservationsBody, paymentsResult] = await Promise.allSettled([
+          apiRequest("/reservations/me"),
+          apiRequest("/payments/me")
+        ]);
+
+        if (reservationsBody.status === "rejected") {
+          throw reservationsBody.reason;
+        }
+
+        reservations = Array.isArray(reservationsBody.value?.data) ? reservationsBody.value.data : [];
+        payments = paymentsResult.status === "fulfilled" && Array.isArray(paymentsResult.value?.data)
+          ? paymentsResult.value.data
+          : [];
+
+        if (paymentsResult.status === "rejected") {
+          showPageAlert("Reservaciones cargadas, pero no se pudieron cargar pagos. Revisa que /payments/me exista.", "warning");
+        }
+
+        renderReservations();
+      } catch (error) {
+        container.innerHTML = `
+          <div class="alert alert-danger">
+            <h5 class="alert-heading">No se pudieron cargar las reservaciones</h5>
+            <p class="mb-0">${error.message}</p>
+          </div>
+        `;
+      }
+    };
+
+    const renderList = (items, mapper, emptyText) => {
+      if (!Array.isArray(items) || !items.length) {
+        return `<p class="text-muted mb-0">${emptyText}</p>`;
+      }
+
+      return `<ul class="list-group list-group-flush">${items.map(mapper).join("")}</ul>`;
+    };
+
+    const openReservationDetail = async (reservationId) => {
+      const body = document.getElementById("reservationDetailBody");
+      detailModal.show();
+      body.innerHTML = `<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>`;
+
+      try {
+        const response = await apiRequest(`/reservations/${reservationId}`);
+        const reservation = response.data;
+        const status = reservation.reservation_status || reservation.status;
+        const roomName = reservation.room_name || reservation.roomName || `Habitación #${reservation.room_id || reservation.roomId || "—"}`;
+
+        body.innerHTML = `
+          <div class="detail-section">
+            <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+              <div>
+                <div class="muted-label">Reservación #${reservation.id}</div>
+                <h4 class="mb-0">${roomName}</h4>
+              </div>
+              <div class="d-flex flex-wrap gap-2 align-items-start">
+                ${statusBadge(status)}
+                ${Array.isArray(reservation.payments) && reservation.payments.some(p => String(p.payment_status).toLowerCase() === "pagado") ? `<span class="badge-status badge-pagado">pagado</span>` : paymentBadge(reservation)}
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="muted-label">Entrada</div>
+                <div class="fw-semibold">${formatDate(reservation.start_date || reservation.startDate)}</div>
+              </div>
+              <div class="col-md-4">
+                <div class="muted-label">Salida</div>
+                <div class="fw-semibold">${formatDate(reservation.end_date || reservation.endDate)}</div>
+              </div>
+              <div class="col-md-4">
+                <div class="muted-label">Total</div>
+                <div class="amount fs-5">${formatMoney(reservation.total)}</div>
+              </div>
+            </div>
+            ${reservation.notes ? `<hr><div class="muted-label">Observaciones</div><p class="mb-0">${reservation.notes}</p>` : ""}
+          </div>
+
+          <div class="detail-section">
+            <h5>Mascotas</h5>
+            ${renderList(reservation.pets, (pet) => `
+              <li class="list-group-item px-0 d-flex justify-content-between">
+                <span>${pet.name || `Mascota #${pet.id}`}</span>
+                <span class="text-muted">${pet.species || "—"} · ${pet.size || "—"}</span>
+              </li>
+            `, "No hay mascotas asociadas.")}
+          </div>
+
+          <div class="detail-section">
+            <h5>Servicios</h5>
+            ${renderList(reservation.services, (service) => `
+              <li class="list-group-item px-0 d-flex justify-content-between gap-3">
+                <span>${service.service_name || service.name || `Servicio #${service.service_id || service.id}`}</span>
+                <span class="text-muted">${service.quantity || 1} × ${formatMoney(service.unit_price || service.price || 0)} = ${formatMoney(service.subtotal || 0)}</span>
+              </li>
+            `, "No se agregaron servicios.")}
+          </div>
+
+          <div class="detail-section">
+            <h5>Pagos</h5>
+            ${renderList(reservation.payments, (payment) => `
+              <li class="list-group-item px-0 d-flex justify-content-between gap-3">
+                <span>${payment.payment_method || "método"} · ${payment.transaction_reference || "sin referencia"}</span>
+                <span class="text-muted">${formatMoney(payment.amount)} · ${payment.payment_status || "—"}</span>
+              </li>
+            `, "Esta reservación aún no tiene pagos.")}
+          </div>
+        `;
+      } catch (error) {
+        body.innerHTML = `<div class="alert alert-danger mb-0">${error.message}</div>`;
+      }
+    };
+
+    const cancelReservation = async (reservationId) => {
+      const reservation = reservations.find((item) => Number(item.id) === Number(reservationId));
+      const roomName = reservation?.room_name || reservation?.roomName || `reservación #${reservationId}`;
+
+      if (!confirm(`¿Seguro que quieres cancelar ${roomName}?`)) return;
+
+      try {
+        await apiRequest(`/reservations/${reservationId}/cancel`, { method: "PATCH" });
+        showPageAlert("Reservación cancelada correctamente.", "success");
+        await loadReservations();
+      } catch (error) {
+        showPageAlert(error.message);
+      }
+    };
+
+    const openPaymentModal = (reservationId) => {
+      const reservation = reservations.find((item) => Number(item.id) === Number(reservationId));
+      if (!reservation) return;
+
+      clearPaymentAlert();
+      document.getElementById("paymentReservationId").value = reservation.id;
+      document.getElementById("paymentReservationTitle").textContent = reservation.room_name || reservation.roomName || `Reservación #${reservation.id}`;
+      document.getElementById("paymentAmount").textContent = formatMoney(reservation.total || reservation.reservation_total || 0);
+      document.getElementById("paymentMethod").value = "tarjeta";
+      document.getElementById("transactionReference").value = `SIM-${Date.now().toString().slice(-6)}`;
+      paymentModal.show();
+    };
+
+    const submitPayment = async (event) => {
+      event.preventDefault();
+      clearPaymentAlert();
+
+      const button = document.getElementById("submitPaymentButton");
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = "Procesando...";
+
+      try {
+        const reservationId = Number(document.getElementById("paymentReservationId").value);
+        const payload = {
+          reservationId,
+          paymentMethod: document.getElementById("paymentMethod").value,
+          transactionReference: document.getElementById("transactionReference").value.trim() || `SIM-${Date.now()}`
+        };
+
+        await apiRequest("/payments", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        showPaymentAlert("Pago registrado correctamente.", "success");
+        setTimeout(async () => {
+          paymentModal.hide();
+          await loadReservations();
+        }, 700);
+      } catch (error) {
+        showPaymentAlert(error.message);
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!getToken()) {
+        window.location.href = "/";
+        return;
+      }
+
+      const user = getStoredUser();
+      if (!user) {
+        localStorage.removeItem(TOKEN_KEY);
+        window.location.href = "/";
+        return;
+      }
+
+      detailModal = new bootstrap.Modal(document.getElementById("reservationDetailModal"));
+      paymentModal = new bootstrap.Modal(document.getElementById("paymentModal"));
+
+      document.getElementById("logoutButton").addEventListener("click", logout);
+      document.getElementById("refreshButton").addEventListener("click", loadReservations);
+      document.getElementById("searchInput").addEventListener("input", renderReservations);
+      document.getElementById("statusFilter").addEventListener("change", renderReservations);
+      document.getElementById("paymentForm").addEventListener("submit", submitPayment);
+
+      loadReservations();
+    });
+  </script>
+</body>
+</html>

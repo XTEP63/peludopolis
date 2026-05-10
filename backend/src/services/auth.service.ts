@@ -99,5 +99,15 @@ export const getCurrentUser = async (userId: number) => {
         throw new Error("Usuario no encontrado")
     }
 
-    return user
+    return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        phone: user.phone,
+        address: user.address,
+        role: user.role,
+        status: user.status
+    }
 }

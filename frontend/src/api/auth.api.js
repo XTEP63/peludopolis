@@ -88,26 +88,34 @@ const setButtonLoading = (button, isLoading, loadingText) => {
 };
 
 const updateAuthUi = () => {
-  const authNavText = document.getElementById("authNavText");
-  const authOpenButton = document.getElementById("authOpenButton");
-  const logoutButton = document.getElementById("logoutButton");
+  const navGuest = document.getElementById("nav-guest");
+  const navUser = document.getElementById("nav-user");
+  const navUserName = document.getElementById("navUserName");
+
+  if (!navGuest || !navUser) return;
 
   if (authState.user) {
-    const name = authState.user.firstName || authState.user.username || "Usuario";
+    const name =
+      authState.user.firstName ||
+      authState.user.username ||
+      "Usuario";
 
-    if (authNavText) authNavText.textContent = `Hola, ${name}`;
-    authOpenButton?.removeAttribute("data-bs-toggle");
-    authOpenButton?.removeAttribute("data-bs-target");
-    authOpenButton?.setAttribute("title", "Ya iniciaste sesión");
-    logoutButton?.classList.remove("d-none");
+    navGuest.style.display = "none";
+    navUser.style.display = "block";
+
+    if (navUserName) {
+      navUserName.textContent = name;
+    }
+
     return;
   }
 
-  if (authNavText) authNavText.textContent = "Invitado";
-  authOpenButton?.setAttribute("data-bs-toggle", "modal");
-  authOpenButton?.setAttribute("data-bs-target", "#loginModal");
-  authOpenButton?.setAttribute("title", "Iniciar sesión");
-  logoutButton?.classList.add("d-none");
+  navGuest.style.display = "block";
+  navUser.style.display = "none";
+
+  if (navUserName) {
+    navUserName.textContent = "Usuario";
+  }
 };
 
 const closeModal = (modalId) => {
@@ -184,6 +192,7 @@ const handleRegister = async (event) => {
 const handleLogout = () => {
   clearSession();
   updateAuthUi();
+  window.location.href = "/";
 };
 
 const validateExistingSession = async () => {
@@ -202,6 +211,8 @@ const validateExistingSession = async () => {
     updateAuthUi();
   }
 };
+
+window.logout = handleLogout;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("loginForm")?.addEventListener("submit", handleLogin);

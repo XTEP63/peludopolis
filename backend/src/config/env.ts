@@ -21,5 +21,5 @@ export const env = {
   DATABASE_URL: process.env.DATABASE_URL as string,
   JWT_SECRET: process.env.JWT_SECRET as string,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN as string,
-  FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5500"
+  FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:3001"
 };
