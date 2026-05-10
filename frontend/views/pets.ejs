@@ -20,7 +20,9 @@
                     <a class="nav-link" href="/profile">Perfil</a>
                     <a class="nav-link active" href="/pets">Mascotas</a>
                     <a class="nav-link" href="/reservations">Reservaciones</a>
-                    <button class="btn btn-outline-secondary btn-sm ms-lg-3 mt-2 mt-lg-0" type="button" onclick="logout()">Cerrar sesión</button>
+                    <button class="btn btn-outline-danger btn-sm ms-lg-3 mt-2 mt-lg-0" type="button" id="logoutButton">
+                        Cerrar sesión
+                    </button>
                 </div>
             </div>
         </div>
@@ -177,14 +179,7 @@
         let petModal;
 
         function getToken() {
-            return localStorage.getItem(TOKEN_KEY) || localStorage.getItem("token");
-        }
-
-        function logout() {
-            localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem(USER_KEY);
-            localStorage.removeItem("token");
-            window.location.href = "/";
+            return localStorage.getItem(TOKEN_KEY)
         }
 
         function requireAuth() {
@@ -462,5 +457,6 @@
             loadPets();
         });
     </script>
+    <script src="/api/auth.api.js"></script>
 </body>
 </html>

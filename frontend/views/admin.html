@@ -63,8 +63,8 @@
                     <i class="bi bi-person-circle"></i>
                     <span id="nav-username">Admin</span>
                 </span>
-                <button class="btn btn-sm btn-outline-light" onclick="logout()">
-                    <i class="bi bi-box-arrow-right"></i> Salir
+                <button class="btn btn-sm btn-outline-light" type="button" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                 </button>
             </div>
         </div>
@@ -797,14 +797,6 @@ async function doLogin() {
     }
 }
 
-function logout() {
-    _token = '';
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('l-password').value = '';
-    document.getElementById('login-error').classList.add('d-none');
-}
-
 function showSection(name, el) {
     document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
@@ -979,5 +971,6 @@ async function checkHealth() {
     }
 }
 </script>
+<script src="/api/auth.api.js"></script>
 </body>
 </html>

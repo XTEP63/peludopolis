@@ -15,7 +15,9 @@
                 <a class="nav-link" href="/profile">Perfil</a>
                 <a class="nav-link" href="/pets">Mascotas</a>
                 <a class="nav-link" href="/reservations">Reservaciones</a>
-                <a class="nav-link" href="/" onclick="logout()">Cerrar Sesión</a>
+                <button class="btn btn-outline-danger btn-sm ms-lg-2" type="button" id="logoutButton">
+                    Cerrar sesión
+                </button>
             </div>
         </div>
     </nav>
@@ -162,14 +164,9 @@
             }
         }
 
-        function logout() {
-            localStorage.removeItem('peludopolis_token');
-            localStorage.removeItem('peludopolis_user');;
-            window.location.href = '/';
-        }
-
         // Load profile when page loads
         loadProfileForEdit();
     </script>
+    <script src="/api/auth.api.js"></script>
 </body>
 </html>
