@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Reservaciones - Peludópolis</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/styles/main.css">
   <style>
@@ -28,21 +28,21 @@
       color: #fff !important;
     }
 
-    .page-header {
-      background: #fff;
-      border: 1px solid var(--peludo-border);
-      border-radius: 22px;
-      padding: 28px;
-      box-shadow: 0 12px 30px rgba(76, 65, 99, 0.08);
-    }
-
+    .page-header,
     .stat-card,
     .reservation-card,
-    .empty-state {
+    .empty-state,
+    .soft-card {
       background: #fff;
       border: 1px solid var(--peludo-border);
       border-radius: 20px;
       box-shadow: 0 10px 24px rgba(76, 65, 99, 0.07);
+    }
+
+    .page-header {
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(76, 65, 99, 0.08);
     }
 
     .stat-card {
@@ -70,6 +70,7 @@
       padding: 8px 12px;
       font-weight: 700;
       text-transform: capitalize;
+      display: inline-block;
     }
 
     .badge-pendiente { background: #fff3cd; color: #856404; }
@@ -115,6 +116,52 @@
       display: grid;
       place-items: center;
     }
+
+    .room-option-card,
+    .pet-option-card,
+    .service-option-card {
+      border: 1px solid var(--peludo-border);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .service-row {
+      border: 1px solid var(--peludo-border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    #createReservationModal .modal-dialog {
+      max-height: calc(100dvh - 1rem);
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #createReservationModal .modal-content {
+      max-height: calc(100dvh - 1rem);
+      overflow: hidden;
+    }
+
+    #createReservationModal #createReservationForm {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100dvh - 1rem);
+      min-height: 0;
+    }
+
+    #createReservationModal .modal-header,
+    #createReservationModal .modal-footer {
+      flex-shrink: 0;
+    }
+
+    #createReservationModal .modal-body {
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    #createReservationModal .soft-card.position-sticky {
+      top: 0;
+    }
   </style>
 </head>
 <body>
@@ -145,14 +192,14 @@
         <div>
           <p class="text-uppercase text-muted fw-bold small mb-1">Panel del cliente</p>
           <h1 class="mb-2">Mis reservaciones</h1>
-          <p class="mb-0 text-muted">Consulta tu historial, cancela reservaciones pendientes o confirmadas y registra pagos simulados.</p>
+          <p class="mb-0 text-muted">Consulta tu historial, crea nuevas reservaciones, cancela estancias válidas y registra pagos simulados.</p>
         </div>
         <div class="text-lg-end">
-          <button class="btn btn-outline-secondary" type="button" disabled title="Depende de la integración de habitaciones de Isa">
+          <button id="newReservationButton" class="btn btn-peludo" type="button">
             <i class="bi bi-plus-circle me-1"></i>
-            Nueva reservación próximamente
+            Nueva reservación
           </button>
-          <div class="small text-muted mt-2">Crear reservaciones se habilita cuando exista el catálogo público de habitaciones.</div>
+          <div class="small text-muted mt-2">Selecciona mascota, habitación, fechas y servicios.</div>
         </div>
       </div>
     </section>
@@ -180,7 +227,7 @@
       </div>
     </section>
 
-    <section class="card border-0 shadow-sm mb-4" style="border-radius: 18px;">
+    <section class="soft-card mb-4">
       <div class="card-body p-3 p-lg-4">
         <div class="row g-3 align-items-end">
           <div class="col-md-6">
@@ -217,6 +264,98 @@
       </div>
     </section>
   </main>
+
+  <div class="modal fade" id="createReservationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <form id="createReservationForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Nueva reservación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <div id="createReservationAlert" class="alert d-none" role="alert"></div>
+
+            <div class="row g-4">
+              <div class="col-lg-7">
+                <div class="detail-section">
+                  <h5 class="mb-3">1. Habitación</h5>
+                  <select id="reservationRoom" class="form-select" required>
+                    <option value="">Cargando habitaciones...</option>
+                  </select>
+                  <div id="selectedRoomSummary" class="mt-3 text-muted small">Selecciona una habitación.</div>
+                </div>
+
+                <div class="detail-section">
+                  <h5 class="mb-3">2. Mascota(s)</h5>
+                  <div id="petsContainer" class="row g-2">
+                    <div class="text-muted">Cargando mascotas...</div>
+                  </div>
+                  <div class="form-text mt-2">Solo puedes reservar mascotas registradas en tu cuenta.</div>
+                </div>
+
+                <div class="detail-section">
+                  <h5 class="mb-3">3. Fechas</h5>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="startDate" class="form-label">Fecha de entrada</label>
+                      <input id="startDate" type="date" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="endDate" class="form-label">Fecha de salida</label>
+                      <input id="endDate" type="date" class="form-control" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="detail-section">
+                  <h5 class="mb-3">4. Servicios adicionales</h5>
+                  <div id="servicesContainer" class="vstack gap-2">
+                    <div class="text-muted">Cargando servicios...</div>
+                  </div>
+                </div>
+
+                <div class="detail-section mb-0">
+                  <h5 class="mb-3">5. Observaciones</h5>
+                  <textarea id="reservationNotes" class="form-control" rows="3" placeholder="Medicamentos, cuidados especiales, horarios, comportamiento..."></textarea>
+                </div>
+              </div>
+
+              <div class="col-lg-5">
+                <div class="soft-card p-4 position-sticky" style="top: 20px;">
+                  <h5>Resumen</h5>
+                  <div class="border-top pt-3 mt-3">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Noches</span>
+                      <strong id="summaryNights">0</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Habitación</span>
+                      <strong id="summaryRoomTotal">$0.00</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Servicios</span>
+                      <strong id="summaryServicesTotal">$0.00</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="fs-5 fw-bold">Total estimado</span>
+                      <strong id="summaryTotal" class="amount fs-4">$0.00</strong>
+                    </div>
+                    <p class="text-muted small mt-3 mb-0">El backend recalcula el total final al crear la reservación.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button id="submitReservationButton" type="submit" class="btn btn-peludo">Crear reservación</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <div class="modal fade" id="reservationDetailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -281,16 +420,23 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const API_BASE_URL = window.location.port === "3000" ? window.location.origin : "http://localhost:3000";
     const TOKEN_KEY = "peludopolis_token";
     const USER_KEY = "peludopolis_user";
+    const SELECTED_ROOM_KEY = "peludopolis_selected_room";
 
     let reservations = [];
     let payments = [];
+    let rooms = [];
+    let pets = [];
+    let services = [];
+    let catalogsLoaded = false;
+
     let detailModal;
     let paymentModal;
+    let createReservationModal;
 
     const formatMoney = (value) => {
       const number = Number(value || 0);
@@ -305,12 +451,29 @@
     };
 
     const normalizeStatus = (status) => String(status || "pendiente").toLowerCase();
-
     const getToken = () => localStorage.getItem(TOKEN_KEY);
 
     const getStoredUser = () => {
       try {
         return JSON.parse(localStorage.getItem(USER_KEY) || "null");
+      } catch {
+        return null;
+      }
+    };
+
+    const getQueryRoomId = () => {
+      const params = new URLSearchParams(window.location.search);
+      const raw = params.get("roomId");
+      return raw ? Number(raw) : null;
+    };
+
+    const getPreselectedRoomId = () => {
+      const queryRoomId = getQueryRoomId();
+      if (queryRoomId) return queryRoomId;
+
+      try {
+        const stored = JSON.parse(localStorage.getItem(SELECTED_ROOM_KEY) || "null");
+        return stored?.id ? Number(stored.id) : null;
       } catch {
         return null;
       }
@@ -340,6 +503,18 @@
       alert.textContent = "";
     };
 
+    const showCreateAlert = (message, type = "danger") => {
+      const alert = document.getElementById("createReservationAlert");
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+    };
+
+    const clearCreateAlert = () => {
+      const alert = document.getElementById("createReservationAlert");
+      alert.className = "alert d-none";
+      alert.textContent = "";
+    };
+
     const apiRequest = async (path, options = {}) => {
       const token = getToken();
       if (!token) {
@@ -353,11 +528,19 @@
         Authorization: `Bearer ${token}`
       };
 
-      const response = await fetch(`${API_BASE_URL}${path}`, {
-        ...options,
-        headers
-      });
+      const response = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
+      const contentType = response.headers.get("content-type") || "";
+      const body = contentType.includes("application/json") ? await response.json() : null;
 
+      if (!response.ok || body?.ok === false) {
+        throw new Error(body?.message || `Error HTTP ${response.status}`);
+      }
+
+      return body;
+    };
+
+    const publicApiRequest = async (path) => {
+      const response = await fetch(`${API_BASE_URL}${path}`);
       const contentType = response.headers.get("content-type") || "";
       const body = contentType.includes("application/json") ? await response.json() : null;
 
@@ -373,6 +556,37 @@
       localStorage.removeItem(USER_KEY);
       window.location.href = "/";
     };
+
+    const getArrayData = (payload) => Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [];
+    const getObjectData = (payload) => payload?.data || payload || null;
+
+    const normalizeRoom = (room) => ({
+      id: Number(room.id || room.room_id),
+      name: room.name || room.room_name || room.nombre_habitacion || "Habitación",
+      petType: room.pet_type_allowed || room.tipo_mascota_permitida || room.type || "",
+      size: room.size_allowed || room.tamaño_permitido || room.tamano_permitido || room.size || "",
+      price: Number(room.price_per_night || room.precio_noche || room.price || 0),
+      description: room.description || room.descripcion || "Sin descripción disponible.",
+      status: room.status || room.estado || "disponible",
+      capacity: Number(room.capacity || room.capacidad || 1),
+      imageUrl: room.image_url || room.imagen_url || room.imageUrl || "/assets/Habitaciones.jpg"
+    });
+
+    const normalizePet = (pet) => ({
+      id: Number(pet.id || pet.pet_id),
+      name: pet.name || pet.pet_name || pet.nombre_mascota || "Mascota",
+      species: pet.species || pet.especie || "",
+      size: pet.size || pet.tamaño || pet.tamano || "",
+      breed: pet.breed || pet.raza || ""
+    });
+
+    const normalizeService = (service) => ({
+      id: Number(service.id || service.service_id),
+      name: service.name || service.service_name || service.nombre_servicio || "Servicio",
+      description: service.description || service.descripcion || "",
+      price: Number(service.price || service.precio || 0),
+      type: service.service_type || service.tipo_servicio || service.type || ""
+    });
 
     const reservationHasPaidPayment = (reservationId) => {
       return payments.some((payment) => {
@@ -447,7 +661,10 @@
           <div class="empty-state p-5 text-center">
             <i class="bi bi-calendar2-x fs-1 text-muted"></i>
             <h3 class="mt-3">No hay reservaciones para mostrar</h3>
-            <p class="text-muted mb-0">Cuando tengas reservaciones reales, aparecerán aquí con su estado y opciones de pago.</p>
+            <p class="text-muted mb-3">Cuando tengas reservaciones reales, aparecerán aquí con su estado y opciones de pago.</p>
+            <button type="button" class="btn btn-peludo" onclick="openCreateReservationModal()">
+              <i class="bi bi-plus-circle me-1"></i>Nueva reservación
+            </button>
           </div>
         `;
         return;
@@ -530,10 +747,8 @@
           throw reservationsBody.reason;
         }
 
-        reservations = Array.isArray(reservationsBody.value?.data) ? reservationsBody.value.data : [];
-        payments = paymentsResult.status === "fulfilled" && Array.isArray(paymentsResult.value?.data)
-          ? paymentsResult.value.data
-          : [];
+        reservations = getArrayData(reservationsBody.value);
+        payments = paymentsResult.status === "fulfilled" ? getArrayData(paymentsResult.value) : [];
 
         if (paymentsResult.status === "rejected") {
           showPageAlert("Reservaciones cargadas, pero no se pudieron cargar pagos. Revisa que /payments/me exista.", "warning");
@@ -547,6 +762,266 @@
             <p class="mb-0">${error.message}</p>
           </div>
         `;
+      }
+    };
+
+    const loadCatalogs = async () => {
+      if (catalogsLoaded) return;
+      clearCreateAlert();
+
+      try {
+        const [petsPayload, roomsPayload, servicesPayload] = await Promise.all([
+          apiRequest("/pets"),
+          publicApiRequest("/rooms"),
+          publicApiRequest("/services")
+        ]);
+
+        pets = getArrayData(petsPayload).map(normalizePet).filter((pet) => pet.id);
+        rooms = getArrayData(roomsPayload).map(normalizeRoom).filter((room) => room.id);
+        services = getArrayData(servicesPayload).map(normalizeService).filter((service) => service.id);
+
+        renderCreateFormCatalogs();
+        catalogsLoaded = true;
+      } catch (error) {
+        showCreateAlert(`${error.message}. Revisa que existan /pets, /rooms y /services.`, "danger");
+      }
+    };
+
+    const renderCreateFormCatalogs = () => {
+      const roomSelect = document.getElementById("reservationRoom");
+      const preselectedRoomId = getPreselectedRoomId();
+
+      roomSelect.innerHTML = `
+        <option value="">Selecciona una habitación</option>
+        ${rooms.map((room) => `
+          <option value="${room.id}">${room.name} · ${room.petType || "N/A"} · ${room.size || "N/A"} · ${formatMoney(room.price)}/noche</option>
+        `).join("")}
+      `;
+
+      if (preselectedRoomId && rooms.some((room) => room.id === preselectedRoomId)) {
+        roomSelect.value = String(preselectedRoomId);
+      }
+
+      const petsContainer = document.getElementById("petsContainer");
+      if (!pets.length) {
+        petsContainer.innerHTML = `
+          <div class="col-12">
+            <div class="alert alert-warning mb-0">
+              No tienes mascotas registradas. Primero registra una en <a href="/pets">Mis Mascotas</a>.
+            </div>
+          </div>
+        `;
+      } else {
+        petsContainer.innerHTML = pets.map((pet) => `
+          <div class="col-md-6">
+            <label class="pet-option-card d-block h-100">
+              <div class="form-check">
+                <input class="form-check-input pet-checkbox" type="checkbox" value="${pet.id}">
+                <span class="form-check-label fw-bold">${pet.name}</span>
+              </div>
+              <div class="small text-muted mt-1">${pet.species || "—"} · ${pet.size || "—"}${pet.breed ? ` · ${pet.breed}` : ""}</div>
+            </label>
+          </div>
+        `).join("");
+      }
+
+      const servicesContainer = document.getElementById("servicesContainer");
+      if (!services.length) {
+        servicesContainer.innerHTML = `<p class="text-muted mb-0">No hay servicios adicionales activos.</p>`;
+      } else {
+        servicesContainer.innerHTML = services.map((service) => `
+          <div class="service-row">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-7">
+                <div class="form-check">
+                  <input class="form-check-input service-checkbox" type="checkbox" value="${service.id}" id="service-${service.id}">
+                  <label class="form-check-label fw-bold" for="service-${service.id}">${service.name}</label>
+                </div>
+                <div class="small text-muted">${service.description || service.type || "Servicio adicional"}</div>
+              </div>
+              <div class="col-md-3 text-md-end">
+                <strong>${formatMoney(service.price)}</strong>
+              </div>
+              <div class="col-md-2">
+                <input type="number" min="1" value="1" class="form-control service-quantity" data-service-id="${service.id}" disabled>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      bindCreateFormEvents();
+      updateSelectedRoomSummary();
+      updateReservationEstimate();
+    };
+
+    const bindCreateFormEvents = () => {
+      document.querySelectorAll(".service-checkbox").forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const quantity = document.querySelector(`.service-quantity[data-service-id="${checkbox.value}"]`);
+          if (quantity) quantity.disabled = !checkbox.checked;
+          updateReservationEstimate();
+        });
+      });
+
+      document.querySelectorAll(".service-quantity").forEach((input) => {
+        input.addEventListener("input", updateReservationEstimate);
+      });
+
+      document.querySelectorAll(".pet-checkbox").forEach((checkbox) => {
+        checkbox.addEventListener("change", updateReservationEstimate);
+      });
+    };
+
+    const getSelectedRoom = () => {
+      const roomId = Number(document.getElementById("reservationRoom").value || 0);
+      return rooms.find((room) => room.id === roomId) || null;
+    };
+
+    const getSelectedPetIds = () => {
+      return Array.from(document.querySelectorAll(".pet-checkbox:checked")).map((input) => Number(input.value));
+    };
+
+    const getSelectedServices = () => {
+      return Array.from(document.querySelectorAll(".service-checkbox:checked")).map((checkbox) => {
+        const quantityInput = document.querySelector(`.service-quantity[data-service-id="${checkbox.value}"]`);
+        return {
+          serviceId: Number(checkbox.value),
+          quantity: Math.max(1, Number(quantityInput?.value || 1))
+        };
+      });
+    };
+
+    const calculateNights = () => {
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      if (!startDate || !endDate) return 0;
+
+      const start = new Date(`${startDate}T00:00:00`);
+      const end = new Date(`${endDate}T00:00:00`);
+      const diff = end.getTime() - start.getTime();
+      return Math.max(0, Math.round(diff / 86400000));
+    };
+
+    const updateSelectedRoomSummary = () => {
+      const room = getSelectedRoom();
+      const summary = document.getElementById("selectedRoomSummary");
+
+      if (!room) {
+        summary.textContent = "Selecciona una habitación.";
+        return;
+      }
+
+      summary.innerHTML = `
+        <div class="room-option-card">
+          <div class="fw-bold">${room.name}</div>
+          <div class="small text-muted">${room.description}</div>
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            <span class="badge bg-light text-dark border">${room.petType || "N/A"}</span>
+            <span class="badge bg-light text-dark border">${room.size || "N/A"}</span>
+            <span class="badge bg-light text-dark border">Capacidad ${room.capacity}</span>
+            <span class="badge bg-light text-dark border">${formatMoney(room.price)}/noche</span>
+          </div>
+        </div>
+      `;
+    };
+
+    const updateReservationEstimate = () => {
+      const room = getSelectedRoom();
+      const nights = calculateNights();
+      const roomTotal = room ? room.price * nights : 0;
+      const selectedServices = getSelectedServices();
+      const servicesTotal = selectedServices.reduce((total, item) => {
+        const service = services.find((entry) => entry.id === item.serviceId);
+        return total + (service ? service.price * item.quantity : 0);
+      }, 0);
+
+      document.getElementById("summaryNights").textContent = nights;
+      document.getElementById("summaryRoomTotal").textContent = formatMoney(roomTotal);
+      document.getElementById("summaryServicesTotal").textContent = formatMoney(servicesTotal);
+      document.getElementById("summaryTotal").textContent = formatMoney(roomTotal + servicesTotal);
+      updateSelectedRoomSummary();
+    };
+
+    const openCreateReservationModal = async () => {
+      clearCreateAlert();
+      document.getElementById("createReservationForm").reset();
+      document.getElementById("summaryNights").textContent = "0";
+      document.getElementById("summaryRoomTotal").textContent = formatMoney(0);
+      document.getElementById("summaryServicesTotal").textContent = formatMoney(0);
+      document.getElementById("summaryTotal").textContent = formatMoney(0);
+
+      createReservationModal.show();
+      await loadCatalogs();
+
+      const preselectedRoomId = getPreselectedRoomId();
+      if (preselectedRoomId) {
+        document.getElementById("reservationRoom").value = String(preselectedRoomId);
+        updateReservationEstimate();
+      }
+    };
+
+    const submitReservation = async (event) => {
+      event.preventDefault();
+      clearCreateAlert();
+
+      const roomId = Number(document.getElementById("reservationRoom").value || 0);
+      const petIds = getSelectedPetIds();
+      const startDate = document.getElementById("startDate").value;
+      const endDate = document.getElementById("endDate").value;
+      const servicesPayload = getSelectedServices();
+      const notes = document.getElementById("reservationNotes").value.trim();
+
+      if (!roomId) {
+        showCreateAlert("Selecciona una habitación.");
+        return;
+      }
+
+      if (!petIds.length) {
+        showCreateAlert("Selecciona al menos una mascota.");
+        return;
+      }
+
+      if (!startDate || !endDate || calculateNights() <= 0) {
+        showCreateAlert("La fecha de salida debe ser posterior a la fecha de entrada.");
+        return;
+      }
+
+      const button = document.getElementById("submitReservationButton");
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = "Creando...";
+
+      try {
+        const payload = {
+          roomId,
+          petIds,
+          startDate,
+          endDate,
+          services: servicesPayload,
+          notes
+        };
+
+        await apiRequest("/reservations", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        localStorage.removeItem(SELECTED_ROOM_KEY);
+        showCreateAlert("Reservación creada correctamente.", "success");
+
+        setTimeout(async () => {
+          createReservationModal.hide();
+          await loadReservations();
+          const url = new URL(window.location.href);
+          url.searchParams.delete("roomId");
+          window.history.replaceState({}, "", url.toString());
+        }, 800);
+      } catch (error) {
+        showCreateAlert(error.message);
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
       }
     };
 
@@ -565,7 +1040,7 @@
 
       try {
         const response = await apiRequest(`/reservations/${reservationId}`);
-        const reservation = response.data;
+        const reservation = getObjectData(response);
         const status = reservation.reservation_status || reservation.status;
         const roomName = reservation.room_name || reservation.roomName || `Habitación #${reservation.room_id || reservation.roomId || "—"}`;
 
@@ -696,7 +1171,7 @@
       }
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       if (!getToken()) {
         window.location.href = "/";
         return;
@@ -711,14 +1186,24 @@
 
       detailModal = new bootstrap.Modal(document.getElementById("reservationDetailModal"));
       paymentModal = new bootstrap.Modal(document.getElementById("paymentModal"));
+      createReservationModal = new bootstrap.Modal(document.getElementById("createReservationModal"));
 
       document.getElementById("logoutButton").addEventListener("click", logout);
       document.getElementById("refreshButton").addEventListener("click", loadReservations);
       document.getElementById("searchInput").addEventListener("input", renderReservations);
       document.getElementById("statusFilter").addEventListener("change", renderReservations);
       document.getElementById("paymentForm").addEventListener("submit", submitPayment);
+      document.getElementById("newReservationButton").addEventListener("click", openCreateReservationModal);
+      document.getElementById("createReservationForm").addEventListener("submit", submitReservation);
+      document.getElementById("reservationRoom").addEventListener("change", updateReservationEstimate);
+      document.getElementById("startDate").addEventListener("change", updateReservationEstimate);
+      document.getElementById("endDate").addEventListener("change", updateReservationEstimate);
 
-      loadReservations();
+      await loadReservations();
+
+      if (getPreselectedRoomId()) {
+        openCreateReservationModal();
+      }
     });
   </script>
 </body>
