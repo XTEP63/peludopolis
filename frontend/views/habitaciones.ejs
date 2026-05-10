@@ -124,6 +124,35 @@
 
     let rooms = [];
 
+    const resolveImageUrl = (imageUrl) => {
+      if (!imageUrl) return "/assets/Habitaciones.jpg";
+
+      if (
+        imageUrl.startsWith("http://") ||
+        imageUrl.startsWith("https://") ||
+        imageUrl.startsWith("data:")
+      ) {
+        return imageUrl;
+      }
+
+      if (imageUrl.startsWith("/assets/")) {
+        return imageUrl;
+      }
+
+      const normalized = imageUrl
+        .replaceAll("\\", "/")
+        .replace(/^(\.\/|\.\.\/)+/, "")
+        .replace(/^frontend\/views\//, "")
+        .replace(/^frontend\/src\//, "")
+        .replace(/^views\//, "")
+        .replace(/^src\//, "")
+        .replace(/^assets\//, "");
+
+      const filename = normalized.split("/").pop();
+
+      return `/assets/${filename}`;
+    };
+
     const normalizeRoom = (room) => ({
       id: room.id || room.room_id,
       name: room.name || room.room_name || room.nombre_habitacion || "Habitación",
@@ -133,7 +162,7 @@
       description: room.description || room.descripcion || "Sin descripción disponible.",
       status: room.status || room.estado || "disponible",
       capacity: room.capacity || room.capacidad || 1,
-      imageUrl: room.image_url || room.imagen_url || "/assets/Habitaciones.jpg"
+      imageUrl: resolveImageUrl(room.image_url || room.imagen_url)
     });
 
     const showAlert = (type, message) => {
