@@ -56,6 +56,10 @@ app.get("/habitaciones", (_req, res) => {
   res.render('habitaciones')
 })
 
+app.get("/habitacion", (_req, res) => {
+  res.render("habitacion", { user: null })
+})
+
 //Panel de admin
 app.get("/admin-panel", (_req, res) => {
   res.sendFile(path.join(rootDir, 'views', 'admin.html'))
