@@ -1,0 +1,355 @@
+/* Estilo para todas las views del usuario/mascotas suyas */
+
+
+/* ESTILO GENERAL */
+
+/* Color principal del body */
+body {
+    background: #e7e7e7;
+    font-family: 'Segoe UI', Tahoma, sans-serif !important;
+}
+
+
+/* NAVBAR */
+
+/* Color de los enlaces del navbar */
+.navbar .nav-link {
+    color: white !important;
+}
+
+/* Enlace activo */
+.navbar .nav-link.active {
+    color: white;
+    font-weight: 600;
+}
+
+/* Marca/logo del navbar */
+.navbar .navbar-brand {
+    color: white;
+    font-weight: 700;
+}
+
+.navbar .navbar-brand:hover {
+    opacity: 0.85;
+}
+
+#logoutButton {
+    background-color: #000206;
+    border-color: #010611;
+    color: white;
+}
+
+#logoutButton:hover {
+    background-color: #42454b;
+    border-color: #252e44;
+    color: white;
+}
+
+
+/* ESTILO DE LAS CARDS */
+
+/* Sombra y borde sutil para todas las cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado de card de perfil */
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    background-color: #7f8561 !important;
+    color: white;
+}
+
+/* Texto dentro de card */
+.card-body p strong {
+    color: #415c63;
+}
+
+
+/* PAGINA DEL PERFIL */
+
+/* Color de fondo de la Navbar */
+.nbprofile {
+    background-color: #5c5f4f !important; 
+}
+
+/* Hover en los enlaces del navbar */
+.nbprofile .nav-link:hover {
+    background-color: rgba(41, 56, 33, 0.288);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Contenedor principal del perfil */
+#profile-content .card {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+/* Separador entre columnas de info */
+#profile-content .row > .col-md-6:first-child {
+    border-right: 1px solid #dee2e6;
+}
+
+/* Título de sección dentro de la card */
+#profile-content h5 {
+    color: #303646;
+    border-bottom: 2px solid #e7e7e7;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+}
+
+/* Botones de acción del perfil */
+#profile-content .btn-primary {
+    background-color: #486159;
+    border-color: #486159;
+}
+
+#profile-content .btn-primary:hover {
+    background-color: #2a3834;
+    border-color: #2a3834;
+}
+
+#profile-content .btn-outline-secondary {
+    color: #415c63;
+    border-color: #415c63;
+}
+
+#profile-content .btn-outline-secondary:hover {
+    background-color: #415c63;
+    color: white;
+}
+
+
+/* PAGINA DE EDITAR PERFIL */
+
+/* Contenedor del formulario de edición */
+#edit-content .card {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+/* Encabezado del formulario */
+#edit-content .card-header {
+    background-color: #415c63;
+}
+
+/* Labels del formulario */
+#edit-content .form-label {
+    font-weight: 600;
+    color: #415c63;
+    font-size: 0.9rem;
+}
+
+/* Inputs con foco en color de la paleta */
+#edit-content .form-control:focus {
+    border-color: #759e9e;
+    box-shadow: 0 0 0 0.2rem rgba(117, 158, 158, 0.25);
+}
+
+/* Botón guardar */
+#edit-content .btn-primary {
+    background-color: #31413c;
+    border-color: #31413c;
+}
+
+#edit-content .btn-primary:hover {
+    background-color: #2b3f39;
+    border-color: #2b3f39;
+}
+
+/* Botón cancelar */
+#edit-content .btn-secondary {
+    background-color: #616e59;
+    border-color: #616e59;
+    color: white;
+}
+
+#edit-content .btn-secondary:hover {
+    background-color: #57674c;
+    border-color: #57674c;
+}
+
+
+/* PAGINA DE MASCOTAS */
+/* Color de fondo de la Navbar */
+.nbpets {
+    background-color: #4f5f5e !important; 
+}
+
+/* Hover en los enlaces del navbar */
+.nbpets .nav-link:hover {
+    background-color: rgba(33, 47, 56, 0.288);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Título de la sección */
+main h1 {
+    color: #415c63;
+    font-weight: 700;
+}
+
+/* > Tarjetas de estadísticas*/
+
+/* Número grande de estadística */
+#activePetsCount,
+#dogsCount,
+#otherPetsCount {
+    color: #4c4163;
+    font-weight: 700;
+}
+
+/* Etiqueta de la estadística */
+section .card-body p.text-muted {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* -> Tarjetas de cada mascota */
+
+/* Card individual de mascota */
+#petsList .card {
+    border-top: 3px solid #759e9e;
+}
+
+/* Nombre de la mascota */
+#petsList .card-title {
+    color: #415c63;
+    font-weight: 700;
+}
+
+/* Badge de especie */
+#petsList .badge.bg-secondary {
+    background-color: #759e9e !important;
+}
+
+/* Badge de estado activo */
+#petsList .badge.bg-success {
+    background-color: #6d8c54 !important;
+}
+
+/* Badge de estado inactivo */
+#petsList .badge.bg-danger {
+    background-color: #434f5b !important;
+}
+
+/* Etiquetas del dl de info */
+#petsList dt {
+    color: #415c63;
+    font-weight: 600;
+}
+
+/* Botón editar mascota */
+#petsList .btn-outline-primary {
+    color: #4c4163;
+    border-color: #4c4163;
+}
+
+#petsList .btn-outline-primary:hover {
+    background-color: #4c4163;
+    color: white;
+}
+
+/* Botón eliminar mascota */
+#petsList .btn-outline-danger {
+    color: #252e44;
+    border-color: #252e44;
+}
+
+#petsList .btn-outline-danger:hover {
+    background-color: #252e44;
+    color: white;
+}
+
+/* >Botón agregar mascota */
+main > div .btn-primary {
+    background-color: #415c63;
+    border-color: #415c63;
+}
+
+main > div .btn-primary:hover {
+    background-color: #2f454b;
+    border-color: #2f454b;
+}
+
+/* > Modal de mascota  */
+
+/* Encabezado del modal */
+#petModal .modal-header {
+    background-color: #415c63;
+    color: white;
+}
+
+#petModal .modal-title {
+    color: white;
+}
+
+/* Botón cerrar del modal */
+#petModal .btn-close {
+    filter: invert(1);
+}
+
+/* Labels del formulario del modal */
+#petModal .form-label {
+    font-weight: 600;
+    color: #415c63;
+    font-size: 0.9rem;
+}
+
+/* Inputs con foco */
+#petModal .form-control:focus,
+#petModal .form-select:focus {
+    border-color: #759e9e;
+    box-shadow: 0 0 0 0.2rem rgba(117, 158, 158, 0.25);
+}
+
+/* Botón guardar del modal */
+#petModal .btn-primary {
+    background-color: #4c4163;
+    border-color: #4c4163;
+}
+
+#petModal .btn-primary:hover {
+    background-color: #3a3050;
+    border-color: #3a3050;
+}
+
+/* Botón cancelar del modal */
+#petModal .btn-secondary {
+    background-color: #759e9e;
+    border-color: #759e9e;
+    color: white;
+}
+
+#petModal .btn-secondary:hover {
+    background-color: #5c8585;
+    border-color: #5c8585;
+}
+
+
+/* ALERTAS GLOBALES */
+
+/* Alerta de éxito */
+.alert-success {
+    background-color: #d4edda;
+    border-color: #6d8c54;
+    color: #3d5c2a;
+}
+
+/* Alerta de error */
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #623636;
+    color: #5d2020;
+}
+
+/* Alerta de advertencia (sin sesión) */
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #b58b3a;
+    color: #7a5c1e;
+}
