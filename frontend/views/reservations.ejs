@@ -131,7 +131,37 @@
       border-radius: 14px;
       padding: 12px;
     }
+    #createReservationModal .modal-dialog {
+      max-height: calc(100dvh - 1rem);
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
 
+    #createReservationModal .modal-content {
+      max-height: calc(100dvh - 1rem);
+      overflow: hidden;
+    }
+
+    #createReservationModal #createReservationForm {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100dvh - 1rem);
+      min-height: 0;
+    }
+
+    #createReservationModal .modal-header,
+    #createReservationModal .modal-footer {
+      flex-shrink: 0;
+    }
+
+    #createReservationModal .modal-body {
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    #createReservationModal .soft-card.position-sticky {
+      top: 0;
+    }
   </style>
 </head>
 <body>
