@@ -743,7 +743,20 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const API = 'http://localhost:3000';
-let _token = '';
+let _token = localStorage.getItem('peludopolis_token') || '';
+
+window.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('peludopolis_user') || 'null');
+
+    if (_token && user?.role === 'admin') {
+        // CASO 1: admin logueado le damos acceso directo
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('nav-username').textContent =
+            user.first_name || user.username || 'Admin';
+    }
+    // CASO 2 y 3: sin token o no es admin se queda en login-screen
+});
 
 document.getElementById('l-password').addEventListener('keydown', e => {
     if (e.key === 'Enter') doLogin();
@@ -888,7 +901,15 @@ function showResponse(key, status, data, ms) {
     `;
 
     // Extraer el array de datos 
-    const rows = extractRows(data);
+    let rows;
+
+    // endpoint especial
+    if (key === 'res-get') {
+        rows = normalizeReservationDetails(data);
+        console.log('NORMALIZED:', normalizeReservationDetails(data));
+    } else {
+        rows = extractRows(data);
+    }
 
     if (rows && rows.length > 0) {
         // Mostrar tabla
@@ -925,6 +946,35 @@ function extractRows(data) {
         if (topKeys.length > 0 && !data.error) return [data];
     }
     return null;
+}
+
+// Funcion para reservations por que hay muchas cosas anidadas :(
+function normalizeReservationDetails(response) {
+
+    const r = response.data || {};
+
+    return [{
+        reservation_id: r.id || '',
+        guest: `${r.first_name || ''} ${r.last_name || ''}`.trim(),
+        room: r.room_name || '',
+        start_date: r.start_date || '',
+        end_date: r.end_date || '',
+        total: r.total || '',
+        reservation_status: r.reservation_status || '',
+
+        pet_name: (r.pets || []).map(p => p.name).join(', '),
+        pet_species: (r.pets || []).map(p => p.species).join(', '),
+        pet_allergies: (r.pets || []).map(p => p.allergies).join(', '),
+        pet_notes: (r.pets || []).map(p => p.notes).join(', '),
+
+        services: (r.services || [])
+            .map(s => `${s.service_name} x${s.quantity}`)
+            .join(', '),
+
+        payment_status: (r.payments || [])
+            .map(p => p.payment_status)
+            .join(', ')
+    }];
 }
 
 function buildTable(rows) {

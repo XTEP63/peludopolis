@@ -184,6 +184,12 @@ const handleLogin = async (event) => {
     saveSession(body.data);
     updateAuthUi();
 
+    // Si es admin, redirigir al panel de admin
+    if (body.data.user?.role === 'admin') {
+        window.location.href = '/admin-panel'; 
+        return;
+}
+
     form.reset();
     closeModal("loginModal");
   } catch (error) {

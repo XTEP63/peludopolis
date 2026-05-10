@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mascotas - Peludópolis</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/profiles.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light nbpets">
         <div class="container">
             <a class="navbar-brand" href="/">Peludópolis</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Abrir navegación">
@@ -17,8 +17,7 @@
 
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="/profile">Perfil</a>
-                    <a class="nav-link active" href="/pets">Mascotas</a>
+                    <a class="nav-link" href="/me">Perfil</a>
                     <a class="nav-link" href="/reservations">Reservaciones</a>
                     <button class="btn btn-outline-danger btn-sm ms-lg-3 mt-2 mt-lg-0" type="button" id="logoutButton">
                         Cerrar sesión
@@ -454,6 +453,11 @@
         document.addEventListener("DOMContentLoaded", () => {
             petModal = new bootstrap.Modal(document.getElementById("petModal"));
             document.getElementById("petForm").addEventListener("submit", savePet);
+            document.getElementById("logoutButton")?.addEventListener("click", () => {
+                localStorage.removeItem("peludopolis_token");
+                localStorage.removeItem("peludopolis_user");
+                window.location.href = "/";
+            });
             loadPets();
         });
     </script>
