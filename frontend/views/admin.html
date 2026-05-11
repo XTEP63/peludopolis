@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Peludópolis | Panel Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="styles/admin.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <i class="bi bi-house-heart" style="font-size: 2.8rem; color: var(--purple);"></i>
+            <h3 class="fw-bold mt-2" style="color: var(--purple);">Peludópolis</h3>
+            <p class="text-muted mb-0">Panel de Administración</p>
+        </div>
+
+        <div id="login-error" class="alert alert-danger d-none" role="alert"></div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Correo electrónico</label>
+            <div class="input-group">
+                <input type="email" class="form-control" id="l-email" placeholder="admin@peludopolis.com">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-semibold">Contraseña</label>
+            <div class="input-group">
+                <input type="password" class="form-control" id="l-password" placeholder="••••••••">
+                <span class="input-group-text"><i class="bi bi-key"></i></span>
+            </div>
+        </div>
+
+        <button class="btn w-100 text-white fw-bold py-2" id="login-btn"
+            style="background: linear-gradient(135deg, var(--purple), var(--teal-dk));"
+            onclick="doLogin()">
+            <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+        </button>
+
+        <p class="text-center text-muted mt-3 mb-0" style="font-size: 12px;">
+            Solo accesible para administradores
+        </p>
+    </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-house-heart"></i> Peludópolis
+                <span class="badge ms-2" style="background-color: var(--green); font-size: 10px;">ADMIN</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span class="text-white" style="font-size: 13px;">
+                    <i class="bi bi-person-circle"></i>
+                    <span id="nav-username">Admin</span>
+                </span>
+                <button class="btn btn-sm btn-outline-light" type="button" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- SIDEBAR -->
+            <nav class="col-md-2 sidebar py-3 px-3">
+                <p class="text-muted fw-bold mb-2" style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">Módulos</p>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showSection('users', this)">
+                            <i class="bi bi-people"></i> Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('rooms', this)">
+                            <i class="bi bi-door-open"></i> Habitaciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('services', this)">
+                            <i class="bi bi-stars"></i> Servicios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('reservations', this)">
+                            <i class="bi bi-calendar-check"></i> Reservaciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('payments', this)">
+                            <i class="bi bi-credit-card"></i> Pagos
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <p class="text-muted fw-bold mb-2" style="font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">API</p>
+                <button class="btn btn-sm w-100 mb-2 btn-health" onclick="checkHealth()">
+                    <i class="bi bi-heart-pulse"></i> Health check
+                </button>
+                <div id="health-result" class="small text-muted"></div>
+            </nav>
+
+            <!-- CONTENIDO -->
+            <main class="col-md-10 py-4 px-4">
+
+                <!-- ENPOINTS DE USUARIOS -->
+                <div class="section-panel active" id="panel-users">
+                    <h4 class="section-title"><i class="bi bi-people"></i> Usuarios</h4>
+
+                    <!-- GET /admin/users — filtros: role, status -->
+                    <div class="endpoint-card" id="card-users-list">
+                        <div class="endpoint-header" onclick="toggleCard('users-list')">
+                            <span class="badge badge-get">GET</span>
+                            <code>/admin/users</code>
+                            <span class="text-muted small ms-auto">Listar usuarios</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">role</label>
+                                    <select class="form-select form-select-sm" id="ul-role">
+                                        <option value="">— todos —</option>
+                                        <option value="admin">admin</option>
+                                        <option value="cliente">cliente</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">status</label>
+                                    <select class="form-select form-select-sm" id="ul-status">
+                                        <option value="">— todos —</option>
+                                        <option value="activo">activo</option>
+                                        <option value="inactivo">inactivo</option>
+                                        <option value="bloqueado">bloqueado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">limit</label>
+                                    <input class="form-control form-control-sm" id="ul-limit" placeholder="sin límite">
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/users',{role:'ul-role',status:'ul-status',limit:'ul-limit'},{},'users-list')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-users-list"></div>
+                            <div class="response-table-wrap" id="table-users-list"></div>
+                            <div class="response-box" id="resp-users-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- GET /admin/users/:id -->
+                    <div class="endpoint-card" id="card-users-get">
+                        <div class="endpoint-header" onclick="toggleCard('users-get')">
+                            <span class="badge badge-get">GET</span>
+                            <code>/admin/users/:id</code>
+                            <span class="text-muted small ms-auto">Usuario por ID</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="ug-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/users/{{id}}',{},{id:'ug-id'},'users-get')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-users-get"></div>
+                            <div class="response-table-wrap" id="table-users-get"></div>
+                            <div class="response-box" id="resp-users-get"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH /admin/users/:id -->
+                    <div class="endpoint-card" id="card-users-patch">
+                        <div class="endpoint-header" onclick="toggleCard('users-patch')">
+                            <span class="badge badge-patch">PATCH</span>
+                            <code>/admin/users/:id</code>
+                            <span class="text-muted small ms-auto">Actualizar usuario</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="up-id" placeholder="1"></div>
+                            </div>
+                            <label class="form-label small fw-semibold">Body JSON</label>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="up-body" rows="3" placeholder='{"first_name": "Nuevo", "phone": "555-0000"}'></textarea>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/users/{{id}}',{},{id:'up-id'},'users-patch','up-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-users-patch"></div>
+                            <div class="response-table-wrap" id="table-users-patch"></div>
+                            <div class="response-box" id="resp-users-patch"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH /admin/users/:id/status -->
+                    <div class="endpoint-card" id="card-users-status">
+                        <div class="endpoint-header" onclick="toggleCard('users-status')">
+                            <span class="badge badge-patch">PATCH</span>
+                            <code>/admin/users/:id/status</code>
+                            <span class="text-muted small ms-auto">Cambiar estado</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="us-id" placeholder="1"></div>
+                            </div>
+                            <label class="form-label small fw-semibold">Body JSON</label>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="us-body" rows="2" placeholder='{"status": "activo"}'></textarea>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/users/{{id}}/status',{},{id:'us-id'},'users-status','us-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-users-status"></div>
+                            <div class="response-table-wrap" id="table-users-status"></div>
+                            <div class="response-box" id="resp-users-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- GET /admin/users/:id/pets — filtro: species -->
+                    <div class="endpoint-card" id="card-users-pets">
+                        <div class="endpoint-header" onclick="toggleCard('users-pets')">
+                            <span class="badge badge-get">GET</span>
+                            <code>/admin/users/:id/pets</code>
+                            <span class="text-muted small ms-auto">Mascotas del usuario</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="upets-id" placeholder="1"></div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">species</label>
+                                    <select class="form-select form-select-sm" id="upets-species">
+                                        <option value="">— todas —</option>
+                                        <option value="perro">perro</option>
+                                        <option value="gato">gato</option>
+                                        <option value="reptil">reptil</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2"><label class="form-label small fw-semibold">limit</label><input class="form-control form-control-sm" id="upets-limit" placeholder="sin límite"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/users/{{id}}/pets',{species:'upets-species',limit:'upets-limit'},{id:'upets-id'},'users-pets')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-users-pets"></div>
+                            <div class="response-table-wrap" id="table-users-pets"></div>
+                            <div class="response-box" id="resp-users-pets"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENDPOINTS DE  HABITACIONES -->
+                <div class="section-panel" id="panel-rooms">
+                    <h4 class="section-title"><i class="bi bi-door-open"></i> Habitaciones</h4>
+
+                    <!-- GET /admin/rooms — filtros: status, pet_type_allowed, size_allowed -->
+                    <div class="endpoint-card" id="card-rooms-list">
+                        <div class="endpoint-header" onclick="toggleCard('rooms-list')">
+                            <span class="badge badge-get">GET</span><code>/admin/rooms</code>
+                            <span class="text-muted small ms-auto">Listar habitaciones</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">status</label>
+                                    <select class="form-select form-select-sm" id="rl-status">
+                                        <option value="">— todos —</option>
+                                        <option value="disponible">disponible</option>
+                                        <option value="ocupada">ocupada</option>
+                                        <option value="mantenimiento">mantenimiento</option>
+                                        <option value="inactiva">inactiva</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">pet_type_allowed</label>
+                                    <select class="form-select form-select-sm" id="rl-pet-type">
+                                        <option value="">— todos —</option>
+                                        <option value="perro">perro</option>
+                                        <option value="gato">gato</option>
+                                        <option value="reptil">reptil</option>
+                                        <option value="ambos">ambos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">size_allowed</label>
+                                    <select class="form-select form-select-sm" id="rl-size">
+                                        <option value="">— todos —</option>
+                                        <option value="pequeno">pequeño</option>
+                                        <option value="mediano">mediano</option>
+                                        <option value="grande">grande</option>
+                                        <option value="todos">todos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">limit</label>
+                                    <input class="form-control form-control-sm" id="rl-limit" placeholder="sin límite">
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/rooms',{status:'rl-status',pet_type_allowed:'rl-pet-type',size_allowed:'rl-size',limit:'rl-limit'},{},'rooms-list')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-rooms-list"></div>
+                            <div class="response-table-wrap" id="table-rooms-list"></div>
+                            <div class="response-box" id="resp-rooms-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- GET /admin/rooms/:id -->
+                    <div class="endpoint-card" id="card-rooms-get">
+                        <div class="endpoint-header" onclick="toggleCard('rooms-get')">
+                            <span class="badge badge-get">GET</span><code>/admin/rooms/:id</code>
+                            <span class="text-muted small ms-auto">Habitación por ID</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="rg-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/rooms/{{id}}',{},{id:'rg-id'},'rooms-get')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-rooms-get"></div>
+                            <div class="response-table-wrap" id="table-rooms-get"></div>
+                            <div class="response-box" id="resp-rooms-get"></div>
+                        </div>
+                    </div>
+
+                    <!-- POST /admin/rooms -->
+                    <div class="endpoint-card" id="card-rooms-create">
+                        <div class="endpoint-header" onclick="toggleCard('rooms-create')">
+                            <span class="badge badge-post">POST</span><code>/admin/rooms</code>
+                            <span class="text-muted small ms-auto">Crear habitación</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <label class="form-label small fw-semibold">Body JSON</label>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="rc-body" rows="5"
+                                placeholder='{"name":"Suite X","pet_type_allowed":"perro","size_allowed":"mediano","capacity":2,"price_per_night":500}'></textarea>
+                            <button class="btn btn-sm btn-exec-post"
+                                onclick="apiCall('POST','/admin/rooms',{},{},'rooms-create','rc-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-rooms-create"></div>
+                            <div class="response-table-wrap" id="table-rooms-create"></div>
+                            <div class="response-box" id="resp-rooms-create"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH /admin/rooms/:id -->
+                    <div class="endpoint-card" id="card-rooms-patch">
+                        <div class="endpoint-header" onclick="toggleCard('rooms-patch')">
+                            <span class="badge badge-patch">PATCH</span><code>/admin/rooms/:id</code>
+                            <span class="text-muted small ms-auto">Actualizar habitación</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="rp-id" placeholder="1"></div>
+                            </div>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="rp-body" rows="3" placeholder='{"price_per_night": 600}'></textarea>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/rooms/{{id}}',{},{id:'rp-id'},'rooms-patch','rp-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-rooms-patch"></div>
+                            <div class="response-table-wrap" id="table-rooms-patch"></div>
+                            <div class="response-box" id="resp-rooms-patch"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH /admin/rooms/:id/status -->
+                    <div class="endpoint-card" id="card-rooms-status">
+                        <div class="endpoint-header" onclick="toggleCard('rooms-status')">
+                            <span class="badge badge-patch">PATCH</span><code>/admin/rooms/:id/status</code>
+                            <span class="text-muted small ms-auto">Cambiar estado</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="rst-id" placeholder="1"></div>
+                            </div>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="rst-body" rows="2" placeholder='{"status": "disponible"}'></textarea>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/rooms/{{id}}/status',{},{id:'rst-id'},'rooms-status','rst-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-rooms-status"></div>
+                            <div class="response-table-wrap" id="table-rooms-status"></div>
+                            <div class="response-box" id="resp-rooms-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- DELETE /admin/rooms/:id -->
+                    <div class="endpoint-card" id="card-rooms-delete">
+                        <div class="endpoint-header" onclick="toggleCard('rooms-delete')">
+                            <span class="badge badge-delete">DELETE</span><code>/admin/rooms/:id</code>
+                            <span class="text-muted small ms-auto">Eliminar habitación</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="rd-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec-delete"
+                                onclick="apiCall('DELETE','/admin/rooms/{{id}}',{},{id:'rd-id'},'rooms-delete')">
+                                <i class="bi bi-trash"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-rooms-delete"></div>
+                            <div class="response-table-wrap" id="table-rooms-delete"></div>
+                            <div class="response-box" id="resp-rooms-delete"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENDPOINTS DE  SERVICIOS -->
+                <div class="section-panel" id="panel-services">
+                    <h4 class="section-title"><i class="bi bi-stars"></i> Servicios</h4>
+
+                    <!-- GET /admin/services — filtros: status, service_type -->
+                    <div class="endpoint-card" id="card-svc-list">
+                        <div class="endpoint-header" onclick="toggleCard('svc-list')">
+                            <span class="badge badge-get">GET</span><code>/admin/services</code>
+                            <span class="text-muted small ms-auto">Listar servicios</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">status</label>
+                                    <select class="form-select form-select-sm" id="sl-status">
+                                        <option value="">— todos —</option>
+                                        <option value="activo">activo</option>
+                                        <option value="inactivo">inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">service_type</label>
+                                    <input class="form-control form-control-sm" id="sl-service-type" placeholder="baño / veterinaria...">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">limit</label>
+                                    <input class="form-control form-control-sm" id="sl-limit" placeholder="sin límite">
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/services',{status:'sl-status',service_type:'sl-service-type',limit:'sl-limit'},{},'svc-list')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-svc-list"></div>
+                            <div class="response-table-wrap" id="table-svc-list"></div>
+                            <div class="response-box" id="resp-svc-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- GET /admin/services/:id -->
+                    <div class="endpoint-card" id="card-svc-get">
+                        <div class="endpoint-header" onclick="toggleCard('svc-get')">
+                            <span class="badge badge-get">GET</span><code>/admin/services/:id</code>
+                            <span class="text-muted small ms-auto">Servicio por ID</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="sg-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/services/{{id}}',{},{id:'sg-id'},'svc-get')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-svc-get"></div>
+                            <div class="response-table-wrap" id="table-svc-get"></div>
+                            <div class="response-box" id="resp-svc-get"></div>
+                        </div>
+                    </div>
+
+                    <!-- POST /admin/services -->
+                    <div class="endpoint-card" id="card-svc-create">
+                        <div class="endpoint-header" onclick="toggleCard('svc-create')">
+                            <span class="badge badge-post">POST</span><code>/admin/services</code>
+                            <span class="text-muted small ms-auto">Crear servicio</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="sc-body" rows="4"
+                                placeholder='{"name":"Spa","description":"Relajación total","price":200,"service_type":"bienestar"}'></textarea>
+                            <button class="btn btn-sm btn-exec-post"
+                                onclick="apiCall('POST','/admin/services',{},{},'svc-create','sc-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-svc-create"></div>
+                            <div class="response-table-wrap" id="table-svc-create"></div>
+                            <div class="response-box" id="resp-svc-create"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH /admin/services/:id -->
+                    <div class="endpoint-card" id="card-svc-patch">
+                        <div class="endpoint-header" onclick="toggleCard('svc-patch')">
+                            <span class="badge badge-patch">PATCH</span><code>/admin/services/:id</code>
+                            <span class="text-muted small ms-auto">Actualizar servicio</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="spu-id" placeholder="1"></div>
+                            </div>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="spu-body" rows="3" placeholder='{"price": 250}'></textarea>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/services/{{id}}',{},{id:'spu-id'},'svc-patch','spu-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-svc-patch"></div>
+                            <div class="response-table-wrap" id="table-svc-patch"></div>
+                            <div class="response-box" id="resp-svc-patch"></div>
+                        </div>
+                    </div>
+
+                    <!-- DELETE /admin/services/:id -->
+                    <div class="endpoint-card" id="card-svc-delete">
+                        <div class="endpoint-header" onclick="toggleCard('svc-delete')">
+                            <span class="badge badge-delete">DELETE</span><code>/admin/services/:id</code>
+                            <span class="text-muted small ms-auto">Eliminar servicio</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="sd-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec-delete"
+                                onclick="apiCall('DELETE','/admin/services/{{id}}',{},{id:'sd-id'},'svc-delete')">
+                                <i class="bi bi-trash"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-svc-delete"></div>
+                            <div class="response-table-wrap" id="table-svc-delete"></div>
+                            <div class="response-box" id="resp-svc-delete"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENDPOINTS DE  RESERVACIONES -->
+                <div class="section-panel" id="panel-reservations">
+                    <h4 class="section-title"><i class="bi bi-calendar-check"></i> Reservaciones</h4>
+
+                    <!-- GET /admin/reservations — filtros: status, user (username|email ILIKE), date -->
+                    <div class="endpoint-card" id="card-res-list">
+                        <div class="endpoint-header" onclick="toggleCard('res-list')">
+                            <span class="badge badge-get">GET</span><code>/admin/reservations</code>
+                            <span class="text-muted small ms-auto">Listar reservaciones</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">status</label>
+                                    <select class="form-select form-select-sm" id="resl-status">
+                                        <option value="">— todos —</option>
+                                        <option value="pendiente">pendiente</option>
+                                        <option value="confirmada">confirmada</option>
+                                        <option value="cancelada">cancelada</option>
+                                        <option value="en_curso">en_curso</option>
+                                        <option value="finalizada">finalizada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">user <small class="text-muted">(username o email)</small></label>
+                                    <input class="form-control form-control-sm" id="resl-user" placeholder="juan / juan@...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">date <small class="text-muted">(YYYY-MM-DD)</small></label>
+                                    <input type="date" class="form-control form-control-sm" id="resl-date">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">limit</label>
+                                    <input class="form-control form-control-sm" id="resl-limit" placeholder="sin límite">
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/reservations',{status:'resl-status',user:'resl-user',date:'resl-date',limit:'resl-limit'},{},'res-list')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-res-list"></div>
+                            <div class="response-table-wrap" id="table-res-list"></div>
+                            <div class="response-box" id="resp-res-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- GET /admin/reservations/:id -->
+                    <div class="endpoint-card" id="card-res-get">
+                        <div class="endpoint-header" onclick="toggleCard('res-get')">
+                            <span class="badge badge-get">GET</span><code>/admin/reservations/:id</code>
+                            <span class="text-muted small ms-auto">Reservación por ID</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="resg-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/reservations/{{id}}',{},{id:'resg-id'},'res-get')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-res-get"></div>
+                            <div class="response-table-wrap" id="table-res-get"></div>
+                            <div class="response-box" id="resp-res-get"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH /admin/reservations/:id/status -->
+                    <div class="endpoint-card" id="card-res-status">
+                        <div class="endpoint-header" onclick="toggleCard('res-status')">
+                            <span class="badge badge-patch">PATCH</span><code>/admin/reservations/:id/status</code>
+                            <span class="text-muted small ms-auto">Cambiar estado</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="ress-id" placeholder="1"></div>
+                            </div>
+                            <textarea class="form-control form-control-sm font-monospace mb-3" id="ress-body" rows="2" placeholder='{"status": "confirmada"}'></textarea>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/reservations/{{id}}/status',{},{id:'ress-id'},'res-status','ress-body')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-res-status"></div>
+                            <div class="response-table-wrap" id="table-res-status"></div>
+                            <div class="response-box" id="resp-res-status"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH check-in -->
+                    <div class="endpoint-card" id="card-res-checkin">
+                        <div class="endpoint-header" onclick="toggleCard('res-checkin')">
+                            <span class="badge badge-patch">PATCH</span><code>/admin/reservations/:id/check-in/confirm</code>
+                            <span class="text-muted small ms-auto">Confirmar check-in</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="reci-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/reservations/{{id}}/check-in/confirm',{},{id:'reci-id'},'res-checkin')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-res-checkin"></div>
+                            <div class="response-table-wrap" id="table-res-checkin"></div>
+                            <div class="response-box" id="resp-res-checkin"></div>
+                        </div>
+                    </div>
+
+                    <!-- PATCH check-out -->
+                    <div class="endpoint-card" id="card-res-checkout">
+                        <div class="endpoint-header" onclick="toggleCard('res-checkout')">
+                            <span class="badge badge-patch">PATCH</span><code>/admin/reservations/:id/check-out/confirm</code>
+                            <span class="text-muted small ms-auto">Confirmar check-out</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3"><label class="form-label small fw-semibold">id *</label><input class="form-control form-control-sm" id="reco-id" placeholder="1"></div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('PATCH','/admin/reservations/{{id}}/check-out/confirm',{},{id:'reco-id'},'res-checkout')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-res-checkout"></div>
+                            <div class="response-table-wrap" id="table-res-checkout"></div>
+                            <div class="response-box" id="resp-res-checkout"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENDPOINTS DE  PAGOS -->
+                <div class="section-panel" id="panel-payments">
+                    <h4 class="section-title"><i class="bi bi-credit-card"></i> Pagos</h4>
+
+                    <!-- GET /admin/payments — filtros: payment_method, payment_status -->
+                    <div class="endpoint-card" id="card-pay-list">
+                        <div class="endpoint-header" onclick="toggleCard('pay-list')">
+                            <span class="badge badge-get">GET</span><code>/admin/payments</code>
+                            <span class="text-muted small ms-auto">Listar pagos</span>
+                            <i class="bi bi-chevron-down ms-2 text-muted"></i>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">payment_method</label>
+                                    <select class="form-select form-select-sm" id="pl-method">
+                                        <option value="">— todos —</option>
+                                        <option value="efectivo">efectivo</option>
+                                        <option value="transferencia">transferencia</option>
+                                        <option value="tarjeta">tarjeta</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">payment_status</label>
+                                    <select class="form-select form-select-sm" id="pl-status">
+                                        <option value="">— todos —</option>
+                                        <option value="pendiente">pendiente</option>
+                                        <option value="pagado">pagado</option>
+                                        <option value="fallido">fallido</option>
+                                        <option value="reembolsado">reembolsado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">limit</label>
+                                    <input class="form-control form-control-sm" id="pl-limit" placeholder="sin límite">
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-exec"
+                                onclick="apiCall('GET','/admin/payments',{payment_method:'pl-method',payment_status:'pl-status',limit:'pl-limit'},{},'pay-list')">
+                                <i class="bi bi-play-fill"></i> Ejecutar
+                            </button>
+                            <div class="response-meta" id="meta-pay-list"></div>
+                            <div class="response-table-wrap" id="table-pay-list"></div>
+                            <div class="response-box" id="resp-pay-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const API = 'http://localhost:3000';
+let _token = localStorage.getItem('peludopolis_token') || '';
+
+window.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('peludopolis_user') || 'null');
+
+    if (_token && user?.role === 'admin') {
+        // CASO 1: admin logueado le damos acceso directo
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('nav-username').textContent =
+            user.first_name || user.username || 'Admin';
+    }
+    // CASO 2 y 3: sin token o no es admin se queda en login-screen
+});
+
+document.getElementById('l-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+});
+
+async function doLogin() {
+    const email    = document.getElementById('l-email').value.trim();
+    const password = document.getElementById('l-password').value.trim();
+    const btn      = document.getElementById('login-btn');
+    const errBox   = document.getElementById('login-error');
+
+    errBox.classList.add('d-none');
+
+    if (!email || !password) {
+        errBox.textContent = 'Por favor completa todos los campos.';
+        errBox.classList.remove('d-none');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Entrando...';
+
+    try {
+        const res  = await fetch(API + '/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message || 'Credenciales incorrectas');
+
+        const token = data.data?.token || data.data?.accessToken;
+        const user  = data.data?.user;
+
+        if (!token) throw new Error('No se recibió token del servidor.');
+        if (user?.role !== 'admin') throw new Error('Acceso denegado. Solo administradores pueden entrar.');
+
+        _token = token;
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('nav-username').textContent = user.first_name || user.username || 'Admin';
+        document.getElementById('bar-email').textContent = email;
+
+    } catch (err) {
+        errBox.textContent = err.message;
+        errBox.classList.remove('d-none');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Iniciar sesión';
+    }
+}
+
+function showSection(name, el) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    el.classList.add('active');
+}
+
+function toggleCard(id) {
+    document.getElementById('card-' + id).classList.toggle('open');
+}
+
+function buildUrl(path, pathParams, queryParams) {
+    let url = path;
+    for (const [key, inputId] of Object.entries(pathParams)) {
+        const val = document.getElementById(inputId)?.value?.trim() || ':' + key;
+        url = url.replace('{{' + key + '}}', encodeURIComponent(val));
+    }
+    const qp = new URLSearchParams();
+    for (const [key, inputId] of Object.entries(queryParams)) {
+        const val = document.getElementById(inputId)?.value?.trim();
+        if (val) qp.append(key, val);
+    }
+    const qs = qp.toString();
+    return qs ? url + '?' + qs : url;
+}
+
+async function apiCall(method, path, queryParams, pathParams, key, bodyInputId) {
+    const btn  = event.currentTarget;
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+    const url     = buildUrl(path, pathParams, queryParams);
+    const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token };
+
+    let body;
+    if (bodyInputId) {
+        const raw = document.getElementById(bodyInputId)?.value?.trim();
+        if (raw) {
+            try { body = JSON.stringify(JSON.parse(raw)); }
+            catch {
+                showResponse(key, 0, { error: 'JSON inválido en el body' }, 0);
+                btn.disabled = false; btn.innerHTML = orig; return;
+            }
+        }
+    }
+
+    const t0 = Date.now();
+    try {
+        const res  = await fetch(API + url, { method, headers, body });
+        const data = await res.json().catch(() => ({}));
+
+        // Aplicar limit en el frontend si viene array
+        const limitInputId = Object.entries(queryParams).find(([k]) => k === 'limit')?.[1];
+        const limitVal     = limitInputId ? parseInt(document.getElementById(limitInputId)?.value?.trim()) : NaN;
+
+        let displayData = data;
+        if (!isNaN(limitVal) && limitVal > 0) {
+            // Busca el array dentro del objeto de respuesta
+            if (Array.isArray(data)) {
+                displayData = data.slice(0, limitVal);
+            } else if (data.data && Array.isArray(data.data)) {
+                displayData = { ...data, data: data.data.slice(0, limitVal) };
+            }
+        }
+
+        showResponse(key, res.status, displayData, Date.now() - t0);
+        if (res.status === 401) setTimeout(() => logout(), 800);
+    } catch (e) {
+        showResponse(key, 0, { error: e.message }, Date.now() - t0);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = orig;
+}
+
+/* Render de respuesta: array - tabla, si es json pues no */
+function showResponse(key, status, data, ms) {
+    const tableWrap = document.getElementById('table-' + key);
+    const box       = document.getElementById('resp-' + key);
+    const meta      = document.getElementById('meta-' + key);
+    const ok        = status >= 200 && status < 300;
+    const cls       = ok ? 'bg-success' : status === 0 ? 'bg-secondary' : 'bg-danger';
+
+    meta.innerHTML = `
+        <span class="badge ${cls}">${status || 'ERR'}</span>
+        <span class="text-muted">${ms}ms</span>
+        <span class="text-muted">— ${new Date().toLocaleTimeString('es-MX')}</span>
+    `;
+
+    // Extraer el array de datos 
+    let rows;
+
+    // endpoint especial
+    if (key === 'res-get') {
+        rows = normalizeReservationDetails(data);
+        console.log('NORMALIZED:', normalizeReservationDetails(data));
+    } else {
+        rows = extractRows(data);
+    }
+
+    if (rows && rows.length > 0) {
+        // Mostrar tabla
+        tableWrap.innerHTML  = buildTable(rows);
+        tableWrap.classList.add('visible');
+        box.classList.remove('visible');
+        box.textContent = '';
+    } else {
+        // Fallback: JSON
+        box.textContent = JSON.stringify(data, null, 2);
+        box.classList.add('visible');
+        tableWrap.classList.remove('visible');
+        tableWrap.innerHTML = '';
+    }
+}
+
+function extractRows(data) {
+    // Array directo
+    if (Array.isArray(data)) return data.length > 0 ? data : null;
+
+    if (data && typeof data === 'object') {
+        // Wrapper { ok, data: [...] } — tabla si data es ARRAY
+        if (Array.isArray(data.data)) return data.data.length > 0 ? data.data : null;
+        if (Array.isArray(data.rows)) return data.rows.length > 0 ? data.rows : null;
+
+        // Wrapper { ok, data: {...} } — objeto único dentro de data → tabla de 1 fila
+        if (data.data && typeof data.data === 'object' && !Array.isArray(data.data)) {
+            const keys = Object.keys(data.data);
+            if (keys.length > 0) return [data.data];
+        }
+
+        // Objeto directo sin wrapper (no tiene campo 'ok' o 'message' como raíz única)
+        const topKeys = Object.keys(data).filter(k => !['ok','message','status'].includes(k));
+        if (topKeys.length > 0 && !data.error) return [data];
+    }
+    return null;
+}
+
+// Funcion para reservations por que hay muchas cosas anidadas :(
+function normalizeReservationDetails(response) {
+
+    const r = response.data || {};
+
+    return [{
+        reservation_id: r.id || '',
+        guest: `${r.first_name || ''} ${r.last_name || ''}`.trim(),
+        room: r.room_name || '',
+        start_date: r.start_date || '',
+        end_date: r.end_date || '',
+        total: r.total || '',
+        reservation_status: r.reservation_status || '',
+
+        pet_name: (r.pets || []).map(p => p.name).join(', '),
+        pet_species: (r.pets || []).map(p => p.species).join(', '),
+        pet_allergies: (r.pets || []).map(p => p.allergies).join(', '),
+        pet_notes: (r.pets || []).map(p => p.notes).join(', '),
+
+        services: (r.services || [])
+            .map(s => `${s.service_name} x${s.quantity}`)
+            .join(', '),
+
+        payment_status: (r.payments || [])
+            .map(p => p.payment_status)
+            .join(', ')
+    }];
+}
+
+function buildTable(rows) {
+    if (!rows || rows.length === 0) return '';
+
+    // Aplanar claves del primer objeto para encabezados
+    const allKeys = [...new Set(rows.flatMap(r => Object.keys(r)))];
+
+    const thead = `<thead><tr>${allKeys.map(k => `<th>${k}</th>`).join('')}</tr></thead>`;
+
+    const tbody = '<tbody>' + rows.map(row => {
+        const cells = allKeys.map(k => {
+            const val = row[k];
+            let display;
+            if (val === null || val === undefined) {
+                display = '<span class="text-muted">—</span>';
+            } else if (Array.isArray(val)) {
+                display = `<span class="nested-cell">[${val.length} items]</span>`;
+            } else if (typeof val === 'object') {
+                display = `<span class="nested-cell">{…}</span>`;
+            } else {
+                // Escapar HTML
+                display = String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            }
+            return `<td class="${Array.isArray(val)||typeof val==='object'?'nested-cell':''}" title="${String(val??'').replace(/"/g,'&quot;')}">${display}</td>`;
+        });
+        return `<tr>${cells.join('')}</tr>`;
+    }).join('') + '</tbody>';
+
+    return `<table class="response-table">${thead}${tbody}</table>`;
+}
+
+async function checkHealth() {
+    const el = document.getElementById('health-result');
+    el.textContent = 'Verificando...';
+    try {
+        const res  = await fetch(API + '/health');
+        const data = await res.json();
+        el.innerHTML = data.ok
+            ? '<span style="color:var(--color-secondary)" class="fw-bold"><i class="bi bi-circle-fill"></i> Activo</span>'
+            : '<span class="text-danger fw-bold"><i class="bi bi-circle-fill"></i> Error</span>';
+    } catch {
+        el.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-circle-fill"></i> Sin conexión</span>';
+    }
+}
+</script>
+<script src="/api/auth.api.js"></script>
+</body>
+</html>
