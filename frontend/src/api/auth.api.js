@@ -1,6 +1,4 @@
-const API_BASE_URL = window.location.port === "3000"
-  ? window.location.origin
-  : "http://localhost:3000";
+const API_BASE_URL = window.PELUDOPOLIS_API_URL || "http://localhost:3000";
 
 const TOKEN_KEY = "peludopolis_token";
 const USER_KEY = "peludopolis_user";

@@ -110,8 +110,9 @@
     <section id="roomsGrid" class="row g-4"></section>
   </main>
 
+  <script src="/config.js"></script>
   <script>
-    const API_BASE_URL = "http://localhost:3000";
+    const API_BASE_URL = window.PELUDOPOLIS_API_URL || "http://localhost:3000";
 
     const roomsGrid = document.getElementById("roomsGrid");
     const roomsAlert = document.getElementById("roomsAlert");

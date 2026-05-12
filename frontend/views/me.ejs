@@ -33,6 +33,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/config.js"></script>
     <script>
         async function loadProfile() {
             const token = localStorage.getItem('peludopolis_token');
@@ -48,7 +49,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost:3000/auth/me', {
+                const response = await fetch(`${API_BASE_URL}/users/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
