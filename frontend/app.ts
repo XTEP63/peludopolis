@@ -11,6 +11,13 @@ app.use('/styles', express.static(path.join(rootDir, 'views/styles')));
 app.use('/assets', express.static(path.join(rootDir, 'views/assets')));
 app.use('/api', express.static(path.join(rootDir, 'src/api')));
 
+app.get("/config.js", (_req, res) => {
+  const backendUrl = process.env.BACKEND_URL || "http://localhost:3000"
+
+  res.type("application/javascript")
+  res.send(`window.PELUDOPOLIS_API_URL = ${JSON.stringify(backendUrl)};`)
+})
+
 // Página de inicio
 app.get("/", (_req, res) => {
   res.render('index', { user: null })

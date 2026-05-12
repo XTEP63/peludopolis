@@ -76,8 +76,9 @@
     <section id="roomDetail" class="d-none"></section>
   </main>
   
+  <script src="/config.js"></script>
   <script>
-    const API_BASE_URL = "http://localhost:3000";
+    const API_BASE_URL = window.PELUDOPOLIS_API_URL || "http://localhost:3000";
     const TOKEN_KEY = "peludopolis_token";
     const SELECTED_ROOM_KEY = "peludopolis_selected_room";
 
